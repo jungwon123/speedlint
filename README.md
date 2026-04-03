@@ -55,6 +55,7 @@ speedlint doctor          # Check compatibility
 --quiet                   Errors only
 --verbose                 Detailed output
 --max-warnings <n>        Fail if warnings exceed threshold
+--watch                   Re-analyze on file changes
 ```
 
 ## Rules
@@ -121,6 +122,39 @@ npm install -D @speedlint/plugin-nextjs
 | `nextjs/use-next-image` | Use `next/image` instead of `<img>` |
 | `nextjs/no-head-element` | Use metadata API in App Router |
 | `nextjs/no-sync-dynamic-usage` | Consider `ssr: false` for client-only dynamic imports |
+
+### @speedlint/plugin-vue
+
+```bash
+npm install -D @speedlint/plugin-vue
+```
+
+| Rule | Description |
+|------|-------------|
+| `vue/no-v-html` | Avoid `v-html` — XSS risk and prevents SSR optimization |
+| `vue/async-component-loading` | Route components should use dynamic import |
+
+### @speedlint/plugin-webpack
+
+```bash
+npm install -D @speedlint/plugin-webpack
+```
+
+| Rule | Description |
+|------|-------------|
+| `webpack/missing-splitchunks` | Enable `splitChunks` for better caching |
+| `webpack/missing-compression` | Add compression plugin for gzip/brotli |
+
+### @speedlint/plugin-vite
+
+```bash
+npm install -D @speedlint/plugin-vite
+```
+
+| Rule | Description |
+|------|-------------|
+| `vite/missing-build-target` | Set explicit `build.target` to avoid polyfills |
+| `vite/missing-manual-chunks` | Add `manualChunks` for vendor splitting |
 
 ## Configuration
 

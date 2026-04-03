@@ -172,31 +172,45 @@ speedlint rules              # List all available rules
 
 ---
 
-## 5. Rule Categories (MVP)
+## 5. Rule Categories (18 rules total)
 
-### Bundle Optimization (4 rules)
+### Built-in Rules (@speedlint/core — 12 rules)
+
+**Bundle Optimization (4)**
 - `bundle/barrel-file-reexport` — barrel file 감지 + import 직접 경로로 변환 [fixable]
 - `bundle/heavy-dependency` — 무거운 패키지 감지 + 경량 대안 제안 [fixable]
 - `bundle/unused-dependency` — 미사용 의존성 감지 + 제거 [fixable]
 - `bundle/dynamic-import-candidate` — 동적 import 대상 감지 [fixable]
 
-### LCP (3 rules)
+**LCP (3)**
 - `lcp/missing-image-priority` — LCP 이미지 fetchpriority 누락 [fixable]
 - `lcp/missing-preload` — 크리티컬 리소스 preload 누락 [fixable]
 - `lcp/render-blocking-resources` — 렌더 블로킹 스크립트 감지 [fixable]
 
-### CLS (2 rules)
+**CLS (2)**
 - `cls/missing-image-dimensions` — 이미지 width/height 누락 [fixable]
 - `cls/missing-video-dimensions` — 비디오/iframe 크기 누락 [detection only]
 
-### FCP (1 rule)
+**FCP (1)**
 - `fcp/third-party-blocking` — 동기 로딩 서드파티 스크립트 [detection only]
 
-### TBT (1 rule)
+**TBT (1)**
 - `tbt/long-task-sync-operations` — 렌더 경로 동기 작업 감지 [detection only]
 
-### General (1 rule)
+**General (1)**
 - `general/passive-event-listeners` — passive 옵션 누락 [fixable]
+
+### Plugin: @speedlint/plugin-react (3 rules)
+
+- `react/missing-lazy-load` — Route 컴포넌트 React.lazy() 사용 권장
+- `react/no-inline-styles-in-render` — 렌더 시 인라인 스타일 객체 생성 금지
+- `react/no-anonymous-default-export` — DevTools/Fast Refresh를 위한 named export 권장
+
+### Plugin: @speedlint/plugin-nextjs (3 rules)
+
+- `nextjs/use-next-image` — `<img>` 대신 `next/image` 사용 권장
+- `nextjs/no-head-element` — App Router에서 metadata API 사용 권장
+- `nextjs/no-sync-dynamic-usage` — 클라이언트 전용 dynamic import에 ssr:false 권장
 
 ---
 

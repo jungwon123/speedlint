@@ -33,7 +33,7 @@ export function formatTerminalReport(
 
 	// Header
 	lines.push("");
-	lines.push(`  ${bold("speedlint")} ${dim("v0.0.0")} ${dim("—")} Analyzing ${project.root}`);
+	lines.push(`  ${bold("speedlint")} ${dim("v0.1.0")} ${dim("—")} Analyzing ${project.root}`);
 	lines.push("");
 
 	// Project info

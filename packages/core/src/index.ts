@@ -46,3 +46,9 @@ export { scanProject, SpeedlintScanError } from "./analyzers/project-scanner.js"
 // Reporters
 export { formatTerminalReport, formatJsonReport } from "./reporters/terminal-reporter.js";
 export type { FormatOptions } from "./reporters/terminal-reporter.js";
+
+// Rules — Bundle
+export { barrelFileReexport } from "./rules/bundle/barrel-file-reexport.js";
+export { heavyDependency } from "./rules/bundle/heavy-dependency.js";
+export { unusedDependency } from "./rules/bundle/unused-dependency.js";
+export { dynamicImportCandidate } from "./rules/bundle/dynamic-import-candidate.js";

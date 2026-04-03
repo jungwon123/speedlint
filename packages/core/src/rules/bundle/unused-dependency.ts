@@ -1,35 +1,18 @@
 import { createRule } from "../../engine/create-rule.js";
-import type { Diagnostic, RuleContext } from "../../types/index.js";
+import type { Diagnostic, RuleContext, Transform } from "../../types/index.js";
 
 const IMPORT_PATTERNS = [
-	/from\s+['"]([^./][^'"]*)['"]/g,       // import from 'package'
-	/require\s*\(\s*['"]([^./][^'"]*)['"]/g, // require('package')
+	/from\s+['"]([^./][^'"]*)['"]/g,
+	/require\s*\(\s*['"]([^./][^'"]*)['"]/g,
 ];
 
-// Dependencies that are used without explicit imports
 const IMPLICIT_DEPS = new Set([
-	"typescript",
-	"@types/node",
-	"@types/react",
-	"@types/react-dom",
-	"eslint",
-	"prettier",
-	"biome",
-	"@biomejs/biome",
-	"vitest",
-	"jest",
-	"tsup",
-	"turbo",
-	"autoprefixer",
-	"tailwindcss",
-	"postcss",
-	"@swc/core",
-	"esbuild",
+	"typescript", "@types/node", "@types/react", "@types/react-dom",
+	"eslint", "prettier", "biome", "@biomejs/biome",
+	"vitest", "jest", "tsup", "turbo",
+	"autoprefixer", "tailwindcss", "postcss", "@swc/core", "esbuild",
 ]);
 
-/**
- * Detects dependencies listed in package.json but never imported in source code.
- */
 export const unusedDependency = createRule({
 	meta: {
 		id: "bundle/unused-dependency",
@@ -44,7 +27,6 @@ export const unusedDependency = createRule({
 		const diagnostics: Diagnostic[] = [];
 		const deps = context.project.packageJson.dependencies ?? {};
 
-		// Collect all imported package names from source
 		const importedPackages = new Set<string>();
 		for (const [, file] of context.files) {
 			for (const pattern of IMPORT_PATTERNS) {
@@ -53,38 +35,34 @@ export const unusedDependency = createRule({
 				while ((match = regex.exec(file.content)) !== null) {
 					const pkg = match[1];
 					if (pkg) {
-						// Handle scoped packages: @scope/package -> @scope/package
-						// Handle subpath imports: package/sub -> package
 						const normalized = pkg.startsWith("@")
 							? pkg.split("/").slice(0, 2).join("/")
 							: pkg.split("/")[0];
-						if (normalized) {
-							importedPackages.add(normalized);
-						}
+						if (normalized) importedPackages.add(normalized);
 					}
 				}
 			}
 		}
 
-		// Check each production dependency
 		for (const depName of Object.keys(deps)) {
 			if (IMPLICIT_DEPS.has(depName)) continue;
 			if (importedPackages.has(depName)) continue;
-
-			// Check if it's a CLI tool (has bin field) — skip those
-			// We can't easily check this without reading node_modules, so skip @types
 			if (depName.startsWith("@types/")) continue;
+
+			const fixDepName = depName;
 
 			diagnostics.push({
 				ruleId: "bundle/unused-dependency",
 				severity: "warning",
 				message: `${depName} is listed in dependencies but never imported`,
 				detail: `Remove ${depName} from package.json if it's not needed, or move to devDependencies`,
-				impact: {
-					metric: "bundleSize",
-					estimated: "varies",
-					confidence: "medium",
-				},
+				impact: { metric: "bundleSize", estimated: "varies", confidence: "medium" },
+				fix: (): Transform[] => [{
+					type: "modifyJSON",
+					filePath: "package.json",
+					jsonPath: `dependencies.${fixDepName}`,
+					jsonValue: undefined,
+				}],
 			});
 		}
 

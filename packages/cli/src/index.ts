@@ -6,10 +6,39 @@ import {
 	formatJsonReport,
 	builtInPlugin,
 	watchProject,
+	runBenchmark,
+	formatBenchmarkReport,
 } from "@speedlint/core";
 import type { RuleCategory, Severity } from "@speedlint/core";
 
 const cli = cac("speedlint");
+
+cli
+	.command("benchmark <url>", "Measure real performance with Lighthouse")
+	.option("--runs <n>", "Number of runs to average", { default: 1 })
+	.option("--device <device>", "Device: mobile, desktop", { default: "mobile" })
+	.option("--json", "Output as JSON")
+	.action(async (url: string, options: Record<string, unknown>) => {
+		const runs = Number(options.runs) || 1;
+		const device = (options.device as string) === "desktop" ? "desktop" as const : "mobile" as const;
+
+		console.log(`\n  Launching headless Chrome...`);
+		console.log(`  Measuring ${url} (${device}, ${runs} run${runs > 1 ? "s" : ""})...\n`);
+
+		try {
+			const result = await runBenchmark({ url, runs, device });
+
+			if (options.json) {
+				console.log(JSON.stringify(result, null, 2));
+			} else {
+				console.log(formatBenchmarkReport(result));
+			}
+		} catch (err) {
+			console.error(`  Error: ${err instanceof Error ? err.message : String(err)}`);
+			console.error("  Make sure Chrome is installed on this machine.\n");
+			process.exit(1);
+		}
+	});
 
 cli
 	.command("[path]", "Analyze project for performance issues")

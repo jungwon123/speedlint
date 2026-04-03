@@ -1,4 +1,12 @@
 import { cac } from "cac";
+import {
+	analyze,
+	fix,
+	formatTerminalReport,
+	formatJsonReport,
+	builtInPlugin,
+} from "@speedlint/core";
+import type { RuleCategory, Severity } from "@speedlint/core";
 
 const cli = cac("speedlint");
 
@@ -13,45 +21,183 @@ cli
 	.option("-f, --format <fmt>", "Output format: terminal, json", { default: "terminal" })
 	.option("-q, --quiet", "Only show errors")
 	.option("-v, --verbose", "Show detailed analysis")
-	.option("--no-cache", "Disable incremental cache")
 	.option("--max-warnings <n>", "Exit with error if warnings exceed threshold")
 	.action(async (path: string | undefined, options: Record<string, unknown>) => {
-		console.log("speedlint: analyzing...", { path: path ?? ".", options });
-		// TODO: implement analyze command
+		const root = path ?? process.cwd();
+		const category = options.category as RuleCategory | undefined;
+		const severity = options.severity as Severity | undefined;
+
+		if (options.fix || options.fixDryRun) {
+			const { analyzeResult, fixResult } = fix(
+				{ root, category, severity },
+				{ dryRun: !!options.fixDryRun },
+			);
+
+			// Show analysis report
+			const report = options.format === "json"
+				? formatJsonReport(analyzeResult.project, analyzeResult.analysis)
+				: formatTerminalReport(analyzeResult.project, analyzeResult.analysis, {
+					verbose: !!options.verbose,
+					quiet: !!options.quiet,
+				});
+			console.log(report);
+
+			// Show fix results
+			if (fixResult.applied.length > 0) {
+				console.log(options.fixDryRun ? "  Fixes that would be applied:" : "  Applied fixes:");
+				for (const f of fixResult.applied) {
+					console.log(`    ${f.ruleId} → ${f.filePath}`);
+					if (options.verbose) {
+						console.log(f.diff);
+					}
+				}
+				console.log(`\n  ${fixResult.applied.length} fix(es) ${options.fixDryRun ? "available" : "applied"}.`);
+			}
+
+			if (fixResult.skipped.length > 0 && options.verbose) {
+				console.log("\n  Skipped fixes:");
+				for (const s of fixResult.skipped) {
+					console.log(`    ${s.ruleId}: ${s.reason}`);
+				}
+			}
+
+			exitWithCode(analyzeResult.analysis.diagnostics, options);
+		} else {
+			const result = analyze({ root, category, severity });
+
+			const report = options.format === "json"
+				? formatJsonReport(result.project, result.analysis)
+				: formatTerminalReport(result.project, result.analysis, {
+					verbose: !!options.verbose,
+					quiet: !!options.quiet,
+				});
+			console.log(report);
+
+			exitWithCode(result.analysis.diagnostics, options);
+		}
 	});
 
 cli
 	.command("fix [path]", "Auto-fix performance issues with preview")
 	.option("-c, --config <path>", "Path to config file")
 	.option("--category <cat>", "Filter by category")
+	.option("--dry-run", "Show what fixes would be applied without applying")
+	.option("-v, --verbose", "Show detailed diffs")
 	.action(async (path: string | undefined, options: Record<string, unknown>) => {
-		console.log("speedlint fix:", { path: path ?? ".", options });
-		// TODO: implement fix command
+		const root = path ?? process.cwd();
+		const category = options.category as RuleCategory | undefined;
+
+		const { analyzeResult, fixResult } = fix(
+			{ root, category },
+			{ dryRun: !!options.dryRun },
+		);
+
+		const report = formatTerminalReport(analyzeResult.project, analyzeResult.analysis);
+		console.log(report);
+
+		if (fixResult.applied.length > 0) {
+			console.log(options.dryRun ? "\n  Fix preview:" : "\n  Applied fixes:");
+			for (const f of fixResult.applied) {
+				console.log(`    ${f.ruleId} → ${f.filePath}`);
+				if (options.verbose) {
+					console.log(f.diff);
+				}
+			}
+			console.log(`\n  ${fixResult.applied.length} fix(es) ${options.dryRun ? "available" : "applied"}.`);
+		} else {
+			console.log("\n  No fixable issues found.");
+		}
 	});
 
 cli
 	.command("init", "Generate speedlint.config.ts")
 	.action(async () => {
-		console.log("speedlint init: generating config...");
-		// TODO: implement init command
+		const configContent = `import { defineConfig } from "@speedlint/core";
+
+export default defineConfig({
+  rules: {
+    "bundle/barrel-file-reexport": "error",
+    "bundle/heavy-dependency": "warning",
+    "bundle/unused-dependency": "warning",
+    "bundle/dynamic-import-candidate": "warning",
+    "lcp/missing-image-priority": "error",
+    "lcp/missing-preload": "warning",
+    "lcp/render-blocking-resources": "error",
+    "cls/missing-image-dimensions": "error",
+    "cls/missing-video-dimensions": "warning",
+    "fcp/third-party-blocking": "warning",
+    "tbt/long-task-sync-operations": "warning",
+    "general/passive-event-listeners": "warning",
+  },
+  ignore: [
+    "node_modules",
+    "dist",
+    "build",
+    ".next",
+    "**/*.test.{ts,tsx}",
+    "**/*.spec.{ts,tsx}",
+  ],
+});
+`;
+		const { writeFileSync } = await import("node:fs");
+		const { join } = await import("node:path");
+		const configPath = join(process.cwd(), "speedlint.config.ts");
+		writeFileSync(configPath, configContent, "utf-8");
+		console.log(`  Created ${configPath}`);
 	});
 
 cli
 	.command("rules", "List all available rules")
 	.option("--category <cat>", "Filter by category")
 	.action(async (options: Record<string, unknown>) => {
-		console.log("speedlint rules:", options);
-		// TODO: implement rules command
+		const category = options.category as string | undefined;
+
+		console.log("\n  speedlint rules\n");
+		for (const rule of builtInPlugin.rules) {
+			if (category && rule.meta.category !== category) continue;
+			const fixBadge = rule.meta.fixable ? " [fixable]" : "";
+			console.log(`  ${rule.meta.severity.padEnd(7)} ${rule.meta.id.padEnd(40)} ${rule.meta.description}${fixBadge}`);
+		}
+		console.log(`\n  ${builtInPlugin.rules.length} rules total\n`);
 	});
 
 cli
 	.command("doctor", "Check installation and project compatibility")
 	.action(async () => {
-		console.log("speedlint doctor: checking...");
-		// TODO: implement doctor command
+		console.log("\n  speedlint doctor\n");
+		try {
+			const result = analyze({ root: process.cwd() });
+			console.log(`  Project: ${result.project.root}`);
+			console.log(`  Framework: ${result.project.framework ?? "vanilla"}`);
+			console.log(`  Bundler: ${result.project.bundler ?? "none"}`);
+			console.log(`  Language: ${result.project.language}`);
+			console.log(`  Module: ${result.project.moduleSystem}`);
+			console.log(`  Config files: ${result.project.configFiles.size}`);
+			console.log(`\n  ✓ speedlint is working correctly\n`);
+		} catch (err) {
+			console.error(`  ✗ ${err instanceof Error ? err.message : String(err)}\n`);
+			process.exit(1);
+		}
 	});
 
 cli.help();
 cli.version("0.0.0");
 
 cli.parse();
+
+function exitWithCode(
+	diagnostics: Array<{ severity: string }>,
+	options: Record<string, unknown>,
+): void {
+	const errors = diagnostics.filter((d) => d.severity === "error").length;
+	const warnings = diagnostics.filter((d) => d.severity === "warning").length;
+
+	if (errors > 0) {
+		process.exit(1);
+	}
+
+	const maxWarnings = Number(options.maxWarnings);
+	if (!Number.isNaN(maxWarnings) && warnings > maxWarnings) {
+		process.exit(1);
+	}
+}

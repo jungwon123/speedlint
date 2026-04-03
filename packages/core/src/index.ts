@@ -47,6 +47,17 @@ export { scanProject, SpeedlintScanError } from "./analyzers/project-scanner.js"
 export { formatTerminalReport, formatJsonReport } from "./reporters/terminal-reporter.js";
 export type { FormatOptions } from "./reporters/terminal-reporter.js";
 
+// Fixers
+export { applyFixes } from "./fixers/fix-engine.js";
+export type { FixResult, AppliedFix, SkippedFix, FixOptions } from "./fixers/fix-engine.js";
+
+// Built-in Plugin
+export { builtInPlugin } from "./engine/built-in-plugin.js";
+
+// High-level API
+export { analyze, fix } from "./speedlint.js";
+export type { SpeedlintOptions, SpeedlintAnalyzeResult } from "./speedlint.js";
+
 // Rules — Bundle
 export { barrelFileReexport } from "./rules/bundle/barrel-file-reexport.js";
 export { heavyDependency } from "./rules/bundle/heavy-dependency.js";

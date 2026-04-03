@@ -42,6 +42,15 @@ export { defineConfig } from "./config/define-config.js";
 
 // Analyzers
 export { scanProject, SpeedlintScanError } from "./analyzers/project-scanner.js";
+export {
+	parseAST,
+	clearASTCache,
+	extractImports,
+	extractExports,
+	extractJSXElements,
+	extractEventListeners,
+} from "./analyzers/ast-parser.js";
+export type { ParseOptions, ImportInfo, ExportInfo, JSXElementInfo, EventListenerInfo } from "./analyzers/ast-parser.js";
 
 // Reporters
 export { formatTerminalReport, formatJsonReport } from "./reporters/terminal-reporter.js";

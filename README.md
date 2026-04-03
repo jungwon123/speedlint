@@ -6,11 +6,14 @@
 
 ## Features
 
-- **12 built-in rules** covering bundle size, LCP, CLS, FCP, TBT
-- **Auto-fix** — 8 rules can automatically fix issues (like ESLint `--fix`)
+- **24 rules** across 7 packages — bundle size, LCP, CLS, FCP, TBT
+- **Auto-fix** — 6 rules with real code transforms (like ESLint `--fix`)
 - **Zero config** — works out of the box, detects your framework and bundler
-- **Framework-agnostic** — React, Next.js, Vue, Svelte, Angular, vanilla
-- **Fast** — static analysis, no browser or build step required
+- **Plugins** — React, Next.js, Vue, Webpack, Vite
+- **Fast** — static analysis with SWC AST parser, no browser needed
+- **Watch mode** — re-analyze on file changes (`--watch`)
+- **GitHub Action** — CI integration out of the box
+- **VS Code extension** — inline warnings in your editor
 - **Programmatic API** — use as a library or CLI
 
 ## Quick Start
@@ -214,6 +217,37 @@ Source Files → ProjectScanner → RuleResolver → AnalysisEngine → Report
 2. **RuleResolver** selects applicable rules based on your setup
 3. **AnalysisEngine** runs each rule against your source files
 4. **FixEngine** applies deterministic, reversible transforms
+
+## GitHub Action
+
+```yaml
+name: Performance Check
+on: [push, pull_request]
+
+jobs:
+  speedlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jungwon123/speedlint-action@v1
+        with:
+          max-warnings: 5
+```
+
+See [GitHub Action docs](packages/github-action/README.md) for all options.
+
+## Custom Plugins
+
+Create your own rules and plugins. See the [Plugin Guide](docs/PLUGIN_GUIDE.md).
+
+```typescript
+import { createRule } from "@speedlint/core";
+
+const myRule = createRule({
+  meta: { id: "my/rule", category: "general", severity: "warning", ... },
+  detect(context) { /* analyze files */ },
+});
+```
 
 ## Contributing
 

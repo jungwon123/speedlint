@@ -1,0 +1,22 @@
+node_modules/
+dist/
+.turbo/
+.speedlint-cache/
+.speedlint-backup/
+*.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+
+# OMC
+.omc/

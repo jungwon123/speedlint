@@ -1,0 +1,87 @@
+name: "speedlint"
+description: "Web performance analysis — bundle size & Core Web Vitals"
+author: "jungwon123"
+
+branding:
+  icon: "zap"
+  color: "yellow"
+
+inputs:
+  path:
+    description: "Project path to analyze"
+    required: false
+    default: "."
+  category:
+    description: "Filter by category: bundle, lcp, cls, fcp, tbt, general"
+    required: false
+  severity:
+    description: "Minimum severity: error, warning, info"
+    required: false
+    default: "warning"
+  max-warnings:
+    description: "Maximum number of warnings before failing"
+    required: false
+    default: "-1"
+  format:
+    description: "Output format: terminal, json"
+    required: false
+    default: "terminal"
+
+outputs:
+  errors:
+    description: "Number of errors found"
+    value: ${{ steps.analyze.outputs.errors }}
+  warnings:
+    description: "Number of warnings found"
+    value: ${{ steps.analyze.outputs.warnings }}
+  total:
+    description: "Total number of issues found"
+    value: ${{ steps.analyze.outputs.total }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: "20"
+
+    - name: Install speedlint
+      shell: bash
+      run: npm install -g @speedlint/cli@latest
+
+    - name: Run speedlint analysis
+      id: analyze
+      shell: bash
+      run: |
+        set +e
+
+        ARGS="${{ inputs.path }}"
+        if [ -n "${{ inputs.category }}" ]; then
+          ARGS="$ARGS --category ${{ inputs.category }}"
+        fi
+        ARGS="$ARGS --severity ${{ inputs.severity }}"
+        ARGS="$ARGS --format ${{ inputs.format }}"
+
+        OUTPUT=$(speedlint $ARGS 2>&1)
+        EXIT_CODE=$?
+
+        echo "$OUTPUT"
+
+        # Parse counts from output
+        ERRORS=$(echo "$OUTPUT" | grep -oP '\d+ errors' | grep -oP '\d+' || echo "0")
+        WARNINGS=$(echo "$OUTPUT" | grep -oP '\d+ warnings' | grep -oP '\d+' || echo "0")
+        TOTAL=$((ERRORS + WARNINGS))
+
+        echo "errors=${ERRORS}" >> $GITHUB_OUTPUT
+        echo "warnings=${WARNINGS}" >> $GITHUB_OUTPUT
+        echo "total=${TOTAL}" >> $GITHUB_OUTPUT
+
+        # Check max-warnings threshold
+        MAX_WARNINGS=${{ inputs.max-warnings }}
+        if [ "$MAX_WARNINGS" != "-1" ] && [ "$WARNINGS" -gt "$MAX_WARNINGS" ]; then
+          echo "::error::speedlint found $WARNINGS warnings (max: $MAX_WARNINGS)"
+          exit 1
+        fi
+
+        exit $EXIT_CODE

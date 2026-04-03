@@ -71,6 +71,38 @@ importers:
         specifier: ^3.0.0
         version: 3.2.4(@types/node@25.5.0)
 
+  packages/plugin-nextjs:
+    dependencies:
+      '@speedlint/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      tsup:
+        specifier: ^8.3.0
+        version: 8.5.1(@swc/core@1.15.21)(postcss@8.5.8)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/node@25.5.0)
+
+  packages/plugin-react:
+    dependencies:
+      '@speedlint/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      tsup:
+        specifier: ^8.3.0
+        version: 8.5.1(@swc/core@1.15.21)(postcss@8.5.8)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/node@25.5.0)
+
 packages:
 
   '@babel/runtime@7.29.2':

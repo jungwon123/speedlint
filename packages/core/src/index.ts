@@ -33,3 +33,6 @@ export type {
 // Engine
 export { createRule } from "./engine/create-rule.js";
 export { defineConfig } from "./config/define-config.js";
+
+// Analyzers
+export { scanProject, SpeedlintScanError } from "./analyzers/project-scanner.js";

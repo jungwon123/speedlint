@@ -10,7 +10,10 @@
     "lint:fix": "biome check --fix .",
     "format": "biome format --write .",
     "typecheck": "turbo typecheck",
-    "clean": "turbo clean"
+    "clean": "turbo clean",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm build && changeset publish"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.0",

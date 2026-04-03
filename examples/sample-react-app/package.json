@@ -1,0 +1,18 @@
+{
+  "name": "sample-react-app",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "moment": "^2.30.0",
+    "lodash": "^4.17.21",
+    "axios": "^1.7.0",
+    "chart.js": "^4.4.0",
+    "unused-analytics-lib": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "vite": "^6.0.0"
+  }
+}

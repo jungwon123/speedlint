@@ -212,6 +212,21 @@ speedlint rules              # List all available rules
 - `nextjs/no-head-element` — App Router에서 metadata API 사용 권장
 - `nextjs/no-sync-dynamic-usage` — 클라이언트 전용 dynamic import에 ssr:false 권장
 
+### Plugin: @speedlint/plugin-vue (2 rules)
+
+- `vue/no-v-html` — XSS 위험 + SSR 최적화 방해
+- `vue/async-component-loading` — Route 컴포넌트 동적 import 권장
+
+### Plugin: @speedlint/plugin-webpack (2 rules)
+
+- `webpack/missing-splitchunks` — splitChunks 최적화 누락
+- `webpack/missing-compression` — gzip/brotli 압축 플러그인 누락
+
+### Plugin: @speedlint/plugin-vite (2 rules)
+
+- `vite/missing-build-target` — 빌드 타겟 미설정 (불필요한 폴리필)
+- `vite/missing-manual-chunks` — 벤더 청크 분리 누락
+
 ---
 
 ## 6. Technical Stack

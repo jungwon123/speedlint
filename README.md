@@ -96,6 +96,32 @@ speedlint doctor          # Check compatibility
 |------|-------------|---------|
 | `general/passive-event-listeners` | Scroll/touch listeners need `{ passive: true }` | Yes |
 
+## Plugins
+
+### @speedlint/plugin-react
+
+```bash
+npm install -D @speedlint/plugin-react
+```
+
+| Rule | Description |
+|------|-------------|
+| `react/missing-lazy-load` | Route components should use `React.lazy()` |
+| `react/no-inline-styles-in-render` | Extract inline style objects to constants |
+| `react/no-anonymous-default-export` | Name default exports for DevTools + Fast Refresh |
+
+### @speedlint/plugin-nextjs
+
+```bash
+npm install -D @speedlint/plugin-nextjs
+```
+
+| Rule | Description |
+|------|-------------|
+| `nextjs/use-next-image` | Use `next/image` instead of `<img>` |
+| `nextjs/no-head-element` | Use metadata API in App Router |
+| `nextjs/no-sync-dynamic-usage` | Consider `ssr: false` for client-only dynamic imports |
+
 ## Configuration
 
 ```bash
@@ -106,12 +132,17 @@ Creates `speedlint.config.ts`:
 
 ```typescript
 import { defineConfig } from "@speedlint/core";
+import react from "@speedlint/plugin-react";
+import nextjs from "@speedlint/plugin-nextjs";
 
 export default defineConfig({
+  plugins: [react, nextjs],
   rules: {
     "bundle/barrel-file-reexport": "error",
     "bundle/heavy-dependency": "warning",
     "lcp/missing-image-priority": "error",
+    "react/no-inline-styles-in-render": "warning",
+    "nextjs/use-next-image": "warning",
     // ...
   },
   ignore: ["node_modules", "dist", "**/*.test.{ts,tsx}"],

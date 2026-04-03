@@ -5,6 +5,7 @@ import {
 	formatTerminalReport,
 	formatJsonReport,
 	builtInPlugin,
+	watchProject,
 } from "@speedlint/core";
 import type { RuleCategory, Severity } from "@speedlint/core";
 
@@ -22,6 +23,7 @@ cli
 	.option("-q, --quiet", "Only show errors")
 	.option("-v, --verbose", "Show detailed analysis")
 	.option("--max-warnings <n>", "Exit with error if warnings exceed threshold")
+	.option("-w, --watch", "Watch mode — re-analyze on file changes")
 	.action(async (path: string | undefined, options: Record<string, unknown>) => {
 		const root = path ?? process.cwd();
 		const category = options.category as RuleCategory | undefined;
@@ -63,17 +65,34 @@ cli
 
 			exitWithCode(analyzeResult.analysis.diagnostics, options);
 		} else {
-			const result = analyze({ root, category, severity });
+			const runAnalysis = () => {
+				const result = analyze({ root, category, severity });
+				const report = options.format === "json"
+					? formatJsonReport(result.project, result.analysis)
+					: formatTerminalReport(result.project, result.analysis, {
+						verbose: !!options.verbose,
+						quiet: !!options.quiet,
+					});
+				console.log(report);
+				return result;
+			};
 
-			const report = options.format === "json"
-				? formatJsonReport(result.project, result.analysis)
-				: formatTerminalReport(result.project, result.analysis, {
-					verbose: !!options.verbose,
-					quiet: !!options.quiet,
+			const result = runAnalysis();
+
+			if (options.watch) {
+				console.log("  \x1b[2mWatching for changes... (Ctrl+C to stop)\x1b[0m\n");
+				watchProject({
+					root,
+					onChange: (filePath) => {
+						console.clear();
+						console.log(`  \x1b[2mChanged: ${filePath}\x1b[0m\n`);
+						runAnalysis();
+						console.log("  \x1b[2mWatching for changes... (Ctrl+C to stop)\x1b[0m\n");
+					},
 				});
-			console.log(report);
-
-			exitWithCode(result.analysis.diagnostics, options);
+			} else {
+				exitWithCode(result.analysis.diagnostics, options);
+			}
 		}
 	});
 

@@ -58,6 +58,10 @@ export { builtInPlugin } from "./engine/built-in-plugin.js";
 export { analyze, fix } from "./speedlint.js";
 export type { SpeedlintOptions, SpeedlintAnalyzeResult } from "./speedlint.js";
 
+// Watcher
+export { watchProject } from "./engine/watcher.js";
+export type { WatchOptions } from "./engine/watcher.js";
+
 // Rules — Bundle
 export { barrelFileReexport } from "./rules/bundle/barrel-file-reexport.js";
 export { heavyDependency } from "./rules/bundle/heavy-dependency.js";

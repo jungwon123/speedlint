@@ -71,6 +71,10 @@ export type { SpeedlintOptions, SpeedlintAnalyzeResult } from "./speedlint.js";
 export { watchProject } from "./engine/watcher.js";
 export type { WatchOptions } from "./engine/watcher.js";
 
+// Benchmark
+export { runBenchmark, formatBenchmarkReport } from "./benchmark/lighthouse-runner.js";
+export type { BenchmarkResult, BenchmarkOptions } from "./benchmark/lighthouse-runner.js";
+
 // Rules — Bundle
 export { barrelFileReexport } from "./rules/bundle/barrel-file-reexport.js";
 export { heavyDependency } from "./rules/bundle/heavy-dependency.js";

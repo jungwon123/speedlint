@@ -22,7 +22,9 @@ export const missingImageDimensions = createRule({
 		for (const [filePath, file] of context.files) {
 			if (!isComponentFile(filePath)) continue;
 
-			const matches = file.content.matchAll(new RegExp(IMG_TAG_PATTERN.source, IMG_TAG_PATTERN.flags));
+			const matches = file.content.matchAll(
+				new RegExp(IMG_TAG_PATTERN.source, IMG_TAG_PATTERN.flags),
+			);
 			for (const match of matches) {
 				const tag = match[0];
 				const hasWidth = WIDTH_PATTERN.test(tag);
@@ -34,9 +36,8 @@ export const missingImageDimensions = createRule({
 
 				const matchIndex = match.index ?? 0;
 				const lineNumber = file.content.substring(0, matchIndex).split("\n").length;
-				const missing = !hasWidth && !hasHeight
-					? "width and height"
-					: !hasWidth ? "width" : "height";
+				const missing =
+					!hasWidth && !hasHeight ? "width and height" : !hasWidth ? "width" : "height";
 
 				const fixFilePath = filePath;
 				const fixContent = file.content;
@@ -62,15 +63,17 @@ export const missingImageDimensions = createRule({
 						const line = fixContent.substring(0, fixMatchIndex).split("\n").length;
 						const lineStart = fixContent.lastIndexOf("\n", fixMatchIndex) + 1;
 						const col = fixMatchIndex - lineStart;
-						return [{
-							type: "replaceText",
-							filePath: fixFilePath,
-							range: {
-								start: { line, column: col },
-								end: { line, column: col + fixTag.length },
+						return [
+							{
+								type: "replaceText",
+								filePath: fixFilePath,
+								range: {
+									start: { line, column: col },
+									end: { line, column: col + fixTag.length },
+								},
+								newText: newTag,
 							},
-							newText: newTag,
-						}];
+						];
 					},
 				});
 			}

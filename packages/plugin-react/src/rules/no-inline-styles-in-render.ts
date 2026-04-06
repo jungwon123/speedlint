@@ -33,7 +33,8 @@ export const noInlineStylesInRender = createRule({
 					ruleId: "react/no-inline-styles-in-render",
 					severity: "warning",
 					message: "Inline style object created in render",
-					detail: "Inline style objects create new references on every render, causing unnecessary re-renders. Extract to a constant or use useMemo",
+					detail:
+						"Inline style objects create new references on every render, causing unnecessary re-renders. Extract to a constant or use useMemo",
 					file: filePath,
 					line: lineNumber,
 					impact: {

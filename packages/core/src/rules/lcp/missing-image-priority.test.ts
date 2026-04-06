@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { missingImagePriority } from "./missing-image-priority.js";
 import type { ProjectContext, RuleContext } from "../../types/index.js";
+import { missingImagePriority } from "./missing-image-priority.js";
 
 function makeContext(
 	files: Record<string, string>,
@@ -35,7 +35,7 @@ describe("lcp/missing-image-priority", () => {
 		});
 		const diagnostics = missingImagePriority.detect(ctx);
 		expect(diagnostics).toHaveLength(1);
-		expect(diagnostics[0]?.message).toContain("loading=\"lazy\"");
+		expect(diagnostics[0]?.message).toContain('loading="lazy"');
 	});
 
 	it("should not flag img with fetchpriority=high", () => {
@@ -47,9 +47,12 @@ describe("lcp/missing-image-priority", () => {
 	});
 
 	it("should detect Next.js Image without priority prop", () => {
-		const ctx = makeContext({
-			"src/app/page.tsx": '<Image src="/hero.jpg" width={1200} height={600} />',
-		}, "nextjs");
+		const ctx = makeContext(
+			{
+				"src/app/page.tsx": '<Image src="/hero.jpg" width={1200} height={600} />',
+			},
+			"nextjs",
+		);
 		const diagnostics = missingImagePriority.detect(ctx);
 		expect(diagnostics.some((d) => d.message.includes("priority prop"))).toBe(true);
 	});

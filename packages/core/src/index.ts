@@ -50,7 +50,13 @@ export {
 	extractJSXElements,
 	extractEventListeners,
 } from "./analyzers/ast-parser.js";
-export type { ParseOptions, ImportInfo, ExportInfo, JSXElementInfo, EventListenerInfo } from "./analyzers/ast-parser.js";
+export type {
+	ParseOptions,
+	ImportInfo,
+	ExportInfo,
+	JSXElementInfo,
+	EventListenerInfo,
+} from "./analyzers/ast-parser.js";
 
 // Reporters
 export { formatTerminalReport, formatJsonReport } from "./reporters/terminal-reporter.js";

@@ -58,7 +58,7 @@ function checkElements(
 			ruleId: "cls/missing-video-dimensions",
 			severity: "warning",
 			message: `<${elementName}> missing explicit dimensions`,
-			detail: `Add width and height attributes or aspect-ratio CSS to prevent layout shift`,
+			detail: "Add width and height attributes or aspect-ratio CSS to prevent layout shift",
 			file: filePath,
 			line: lineNumber,
 			impact: {

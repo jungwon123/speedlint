@@ -26,7 +26,8 @@ export const missingLazyLoad = createRule({
 			if (!/\.(tsx|jsx)$/.test(filePath)) continue;
 
 			// Check if file uses React Router routes
-			const hasRoutes = file.content.includes("<Route") || file.content.includes("createBrowserRouter");
+			const hasRoutes =
+				file.content.includes("<Route") || file.content.includes("createBrowserRouter");
 			if (!hasRoutes) continue;
 
 			// Check if any lazy imports exist
@@ -36,8 +37,7 @@ export const missingLazyLoad = createRule({
 			const importRegex = new RegExp(STATIC_IMPORT_PATTERN.source, STATIC_IMPORT_PATTERN.flags);
 			const imports = new Map<string, { source: string; line: number }>();
 
-			let match: RegExpExecArray | null;
-			while ((match = importRegex.exec(file.content)) !== null) {
+			for (const match of file.content.matchAll(importRegex)) {
 				const name = match[1];
 				const source = match[2];
 				if (name && source && source.startsWith(".")) {
@@ -48,7 +48,7 @@ export const missingLazyLoad = createRule({
 
 			// Check Route components
 			const routeRegex = new RegExp(ROUTE_COMPONENT_PATTERN.source, ROUTE_COMPONENT_PATTERN.flags);
-			while ((match = routeRegex.exec(file.content)) !== null) {
+			for (const match of file.content.matchAll(routeRegex)) {
 				const componentName = match[1];
 				if (componentName && imports.has(componentName)) {
 					const imp = imports.get(componentName);

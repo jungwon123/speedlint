@@ -1,6 +1,6 @@
 import { watch } from "node:fs";
-import { join } from "node:path";
 import { readdirSync, statSync } from "node:fs";
+import { join } from "node:path";
 
 const IGNORE_DIRS = new Set([
 	"node_modules",
@@ -47,27 +47,31 @@ export function watchProject(options: WatchOptions): () => void {
 
 	function setupWatch(dir: string): void {
 		try {
-			const watcher = watch(dir, { recursive: true, signal: abortController.signal }, (_event, filename) => {
-				if (!filename) return;
-				const ext = filename.substring(filename.lastIndexOf("."));
-				if (!WATCH_EXTENSIONS.has(ext)) return;
+			const watcher = watch(
+				dir,
+				{ recursive: true, signal: abortController.signal },
+				(_event, filename) => {
+					if (!filename) return;
+					const ext = filename.substring(filename.lastIndexOf("."));
+					if (!WATCH_EXTENSIONS.has(ext)) return;
 
-				// Ignore files in excluded directories
-				if (IGNORE_DIRS.has(filename.split("/")[0] ?? "")) return;
+					// Ignore files in excluded directories
+					if (IGNORE_DIRS.has(filename.split("/")[0] ?? "")) return;
 
-				pendingFile = filename;
+					pendingFile = filename;
 
-				if (debounceTimer) {
-					clearTimeout(debounceTimer);
-				}
-
-				debounceTimer = setTimeout(() => {
-					if (pendingFile) {
-						onChange(pendingFile);
-						pendingFile = null;
+					if (debounceTimer) {
+						clearTimeout(debounceTimer);
 					}
-				}, debounceMs);
-			});
+
+					debounceTimer = setTimeout(() => {
+						if (pendingFile) {
+							onChange(pendingFile);
+							pendingFile = null;
+						}
+					}, debounceMs);
+				},
+			);
 
 			watchers.push(watcher);
 		} catch {
@@ -91,7 +95,11 @@ export function watchProject(options: WatchOptions): () => void {
 		abortController.abort();
 		if (debounceTimer) clearTimeout(debounceTimer);
 		for (const w of watchers) {
-			try { w.close(); } catch { /* ignore */ }
+			try {
+				w.close();
+			} catch {
+				/* ignore */
+			}
 		}
 	};
 }
@@ -115,7 +123,11 @@ function watchDirRecursive(
 					watchers.push(watcher);
 					watchDirRecursive(fullPath, watchers, signal, (f) => onFile(join(name, f)));
 				}
-			} catch { /* skip */ }
+			} catch {
+				/* skip */
+			}
 		}
-	} catch { /* skip */ }
+	} catch {
+		/* skip */
+	}
 }

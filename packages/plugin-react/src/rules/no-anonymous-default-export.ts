@@ -16,7 +16,8 @@ export const noAnonymousDefaultExport = createRule({
 		id: "react/no-anonymous-default-export",
 		category: "general",
 		severity: "warning",
-		description: "Components should have named default exports for better debugging and Fast Refresh",
+		description:
+			"Components should have named default exports for better debugging and Fast Refresh",
 		docs: "https://speedlint.dev/rules/react/no-anonymous-default-export",
 		fixable: false,
 		frameworks: ["react", "nextjs"],
@@ -39,7 +40,8 @@ export const noAnonymousDefaultExport = createRule({
 						ruleId: "react/no-anonymous-default-export",
 						severity: "warning",
 						message: "Anonymous default export detected",
-						detail: "Name your default export for better debugging in React DevTools and reliable Fast Refresh",
+						detail:
+							"Name your default export for better debugging in React DevTools and reliable Fast Refresh",
 						file: filePath,
 						line: lineNumber,
 						impact: {

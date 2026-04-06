@@ -1,4 +1,4 @@
-import { readFileSync, existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Bundler, Framework, PackageJson, ProjectContext } from "../types/index.js";
 
@@ -100,10 +100,7 @@ function detectFramework(deps: Set<string>): Framework | null {
 	return null;
 }
 
-function detectBundler(
-	deps: Set<string>,
-	configFiles: Map<string, string>,
-): Bundler | null {
+function detectBundler(deps: Set<string>, configFiles: Map<string, string>): Bundler | null {
 	// Check config files first (more reliable)
 	for (const { file, bundler } of BUNDLER_CONFIG_FILES) {
 		if (configFiles.has(file)) {

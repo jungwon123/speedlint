@@ -28,7 +28,9 @@ export const renderBlockingResources = createRule({
 			const headContent = headMatch[1] ?? "";
 			const headStart = file.content.indexOf(headContent);
 
-			const scriptMatches = headContent.matchAll(new RegExp(SYNC_SCRIPT_PATTERN.source, SYNC_SCRIPT_PATTERN.flags));
+			const scriptMatches = headContent.matchAll(
+				new RegExp(SYNC_SCRIPT_PATTERN.source, SYNC_SCRIPT_PATTERN.flags),
+			);
 			for (const match of scriptMatches) {
 				const tag = match[0];
 
@@ -48,7 +50,8 @@ export const renderBlockingResources = createRule({
 					ruleId: "lcp/render-blocking-resources",
 					severity: "error",
 					message: "Render-blocking script in <head>",
-					detail: "Add defer or async attribute to prevent this script from blocking page rendering",
+					detail:
+						"Add defer or async attribute to prevent this script from blocking page rendering",
 					file: filePath,
 					line: lineNumber,
 					impact: { metric: "LCP", estimated: "-100-500ms", confidence: "high" },
@@ -57,15 +60,17 @@ export const renderBlockingResources = createRule({
 						const line = fixContent.substring(0, fixAbsIndex).split("\n").length;
 						const lineStart = fixContent.lastIndexOf("\n", fixAbsIndex) + 1;
 						const col = fixAbsIndex - lineStart;
-						return [{
-							type: "replaceText",
-							filePath: fixFilePath,
-							range: {
-								start: { line, column: col },
-								end: { line, column: col + fixTag.length },
+						return [
+							{
+								type: "replaceText",
+								filePath: fixFilePath,
+								range: {
+									start: { line, column: col },
+									end: { line, column: col + fixTag.length },
+								},
+								newText: newTag,
 							},
-							newText: newTag,
-						}];
+						];
 					},
 				});
 			}

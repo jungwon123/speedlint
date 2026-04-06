@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { dynamicImportCandidate } from "./dynamic-import-candidate.js";
 import type { ProjectContext, RuleContext } from "../../types/index.js";
+import { dynamicImportCandidate } from "./dynamic-import-candidate.js";
 
 function makeContext(files: Record<string, string>): RuleContext {
 	const fileMap = new Map(
@@ -37,10 +37,7 @@ describe("bundle/dynamic-import-candidate", () => {
 
 	it("should not flag if already dynamically imported", () => {
 		const ctx = makeContext({
-			"src/chart.ts": [
-				"// lazy loaded",
-				"const Chart = await import('chart.js')",
-			].join("\n"),
+			"src/chart.ts": ["// lazy loaded", "const Chart = await import('chart.js')"].join("\n"),
 		});
 		const diagnostics = dynamicImportCandidate.detect(ctx);
 		expect(diagnostics).toHaveLength(0);

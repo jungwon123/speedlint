@@ -57,20 +57,14 @@ export function resolveRules({ config, project }: ResolveOptions): ResolvedRule[
 /**
  * Filter resolved rules by category.
  */
-export function filterByCategory(
-	rules: ResolvedRule[],
-	category: RuleCategory,
-): ResolvedRule[] {
+export function filterByCategory(rules: ResolvedRule[], category: RuleCategory): ResolvedRule[] {
 	return rules.filter((r) => r.rule.meta.category === category);
 }
 
 /**
  * Filter resolved rules by minimum severity.
  */
-export function filterBySeverity(
-	rules: ResolvedRule[],
-	minSeverity: Severity,
-): ResolvedRule[] {
+export function filterBySeverity(rules: ResolvedRule[], minSeverity: Severity): ResolvedRule[] {
 	const severityOrder: Record<Severity, number> = {
 		error: 0,
 		warning: 1,

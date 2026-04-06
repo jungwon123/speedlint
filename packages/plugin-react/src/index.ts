@@ -1,7 +1,7 @@
 import type { SpeedlintPlugin } from "@speedlint/core";
 import { missingLazyLoad } from "./rules/missing-lazy-load.js";
-import { noInlineStylesInRender } from "./rules/no-inline-styles-in-render.js";
 import { noAnonymousDefaultExport } from "./rules/no-anonymous-default-export.js";
+import { noInlineStylesInRender } from "./rules/no-inline-styles-in-render.js";
 
 const pluginReact: SpeedlintPlugin = {
 	name: "@speedlint/plugin-react",

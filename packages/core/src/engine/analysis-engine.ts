@@ -1,12 +1,6 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { extname, join, relative } from "node:path";
-import type {
-	DepGraph,
-	Diagnostic,
-	FileMap,
-	ProjectContext,
-	RuleContext,
-} from "../types/index.js";
+import type { DepGraph, Diagnostic, FileMap, ProjectContext, RuleContext } from "../types/index.js";
 import type { ResolvedRule } from "./rule-resolver.js";
 
 const DEFAULT_TIMEOUT_MS = 10_000;
@@ -154,7 +148,9 @@ function withTimeout<T>(fn: () => T, timeoutMs: number): T {
 	const elapsed = performance.now() - start;
 
 	if (elapsed > timeoutMs) {
-		throw new Error(`Rule execution exceeded timeout of ${timeoutMs}ms (took ${Math.round(elapsed)}ms)`);
+		throw new Error(
+			`Rule execution exceeded timeout of ${timeoutMs}ms (took ${Math.round(elapsed)}ms)`,
+		);
 	}
 
 	return result;

@@ -1,6 +1,6 @@
-import * as vscode from "vscode";
 import { analyze } from "@speedlint/core";
 import type { Diagnostic as SpeedlintDiagnostic } from "@speedlint/core";
+import * as vscode from "vscode";
 
 const DIAGNOSTIC_SOURCE = "speedlint";
 let diagnosticCollection: vscode.DiagnosticCollection;
@@ -96,7 +96,7 @@ function runAnalysis() {
 		}
 	} catch (err) {
 		const message = err instanceof Error ? err.message : String(err);
-		statusBarItem.text = `$(zap) speedlint: error`;
+		statusBarItem.text = "$(zap) speedlint: error";
 		vscode.window.showErrorMessage(`speedlint: ${message}`);
 	}
 }
@@ -110,9 +110,7 @@ function runFix() {
 		const { fixResult } = fix({ root: workspaceFolder.uri.fsPath });
 
 		if (fixResult.applied.length > 0) {
-			vscode.window.showInformationMessage(
-				`speedlint: fixed ${fixResult.applied.length} issue(s)`,
-			);
+			vscode.window.showInformationMessage(`speedlint: fixed ${fixResult.applied.length} issue(s)`);
 			runAnalysis(); // Re-analyze after fix
 		} else {
 			vscode.window.showInformationMessage("speedlint: no fixable issues found");
@@ -127,11 +125,12 @@ function toVSCodeDiagnostic(diag: SpeedlintDiagnostic): vscode.Diagnostic {
 	const line = Math.max(0, (diag.line ?? 1) - 1);
 	const range = new vscode.Range(line, 0, line, Number.MAX_SAFE_INTEGER);
 
-	const severity = diag.severity === "error"
-		? vscode.DiagnosticSeverity.Error
-		: diag.severity === "warning"
-			? vscode.DiagnosticSeverity.Warning
-			: vscode.DiagnosticSeverity.Information;
+	const severity =
+		diag.severity === "error"
+			? vscode.DiagnosticSeverity.Error
+			: diag.severity === "warning"
+				? vscode.DiagnosticSeverity.Warning
+				: vscode.DiagnosticSeverity.Information;
 
 	const vscodeDiag = new vscode.Diagnostic(range, diag.message, severity);
 	vscodeDiag.source = DIAGNOSTIC_SOURCE;

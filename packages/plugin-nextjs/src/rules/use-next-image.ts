@@ -36,7 +36,8 @@ export const useNextImage = createRule({
 					ruleId: "nextjs/use-next-image",
 					severity: "warning",
 					message: "Use next/image instead of <img> for automatic optimization",
-					detail: "next/image provides automatic lazy loading, responsive sizes, WebP/AVIF conversion, and blur placeholders",
+					detail:
+						"next/image provides automatic lazy loading, responsive sizes, WebP/AVIF conversion, and blur placeholders",
 					file: filePath,
 					line: lineNumber,
 					impact: {

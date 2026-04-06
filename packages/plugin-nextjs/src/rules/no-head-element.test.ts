@@ -1,6 +1,6 @@
+import type { ProjectContext, RuleContext } from "@speedlint/core";
 import { describe, expect, it } from "vitest";
 import { noHeadElement } from "./no-head-element.js";
-import type { ProjectContext, RuleContext } from "@speedlint/core";
 
 function makeContext(files: Record<string, string>): RuleContext {
 	const fileMap = new Map(

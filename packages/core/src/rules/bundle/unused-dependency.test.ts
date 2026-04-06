@@ -1,11 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { unusedDependency } from "./unused-dependency.js";
 import type { ProjectContext, RuleContext } from "../../types/index.js";
+import { unusedDependency } from "./unused-dependency.js";
 
-function makeContext(
-	deps: Record<string, string>,
-	files: Record<string, string>,
-): RuleContext {
+function makeContext(deps: Record<string, string>, files: Record<string, string>): RuleContext {
 	const fileMap = new Map(
 		Object.entries(files).map(([path, content]) => [path, { content, mtime: 0 }]),
 	);
@@ -64,10 +61,7 @@ describe("bundle/unused-dependency", () => {
 	});
 
 	it("should skip implicit deps like typescript", () => {
-		const ctx = makeContext(
-			{ typescript: "^5.7.0" },
-			{ "src/app.ts": "const x = 1" },
-		);
+		const ctx = makeContext({ typescript: "^5.7.0" }, { "src/app.ts": "const x = 1" });
 		const diagnostics = unusedDependency.detect(ctx);
 		expect(diagnostics).toHaveLength(0);
 	});

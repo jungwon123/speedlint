@@ -42,13 +42,13 @@ export const dynamicImportCandidate = createRule({
 
 	detect(context: RuleContext): Diagnostic[] {
 		const diagnostics: Diagnostic[] = [];
-		const staticImportPattern = /^import\s+(?:(?:\{[^}]*\}|\*\s+as\s+\w+|\w+)\s+from\s+)?['"]([^'"]+)['"]/gm;
+		const staticImportPattern =
+			/^import\s+(?:(?:\{[^}]*\}|\*\s+as\s+\w+|\w+)\s+from\s+)?['"]([^'"]+)['"]/gm;
 
 		for (const [filePath, file] of context.files) {
 			const regex = new RegExp(staticImportPattern.source, staticImportPattern.flags);
-			let match: RegExpExecArray | null;
 
-			while ((match = regex.exec(file.content)) !== null) {
+			for (const match of file.content.matchAll(regex)) {
 				const pkg = match[1];
 				if (!pkg || pkg.startsWith(".") || pkg.startsWith("node:")) continue;
 

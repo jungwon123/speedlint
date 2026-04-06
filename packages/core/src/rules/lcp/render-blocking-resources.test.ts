@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { renderBlockingResources } from "./render-blocking-resources.js";
 import type { ProjectContext, RuleContext } from "../../types/index.js";
+import { renderBlockingResources } from "./render-blocking-resources.js";
 
 function makeContext(files: Record<string, string>): RuleContext {
 	const fileMap = new Map(
@@ -44,7 +44,8 @@ describe("lcp/render-blocking-resources", () => {
 
 	it("should not flag type=module scripts", () => {
 		const ctx = makeContext({
-			"index.html": '<html><head><script type="module" src="/app.js"></script></head><body></body></html>',
+			"index.html":
+				'<html><head><script type="module" src="/app.js"></script></head><body></body></html>',
 		});
 		const diagnostics = renderBlockingResources.detect(ctx);
 		expect(diagnostics).toHaveLength(0);

@@ -22,7 +22,8 @@ export const missingSplitChunks = createRule({
 					ruleId: "webpack/missing-splitchunks",
 					severity: "warning",
 					message: "Webpack config missing optimization.splitChunks",
-					detail: "Add optimization.splitChunks to split vendor code into separate chunks for better caching",
+					detail:
+						"Add optimization.splitChunks to split vendor code into separate chunks for better caching",
 					file: filePath,
 					impact: { metric: "bundleSize", estimated: "improves caching", confidence: "high" },
 				});

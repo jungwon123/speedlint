@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { createRule } from "./create-rule.js";
 import type { Diagnostic, FixContext, RuleContext, Transform } from "../types/index.js";
+import { createRule } from "./create-rule.js";
 
 describe("createRule", () => {
 	it("should return a valid rule object", () => {

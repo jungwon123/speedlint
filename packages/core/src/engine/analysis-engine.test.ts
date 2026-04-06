@@ -1,9 +1,9 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import type { ProjectContext, ReportSummary } from "../types/index.js";
 import { runAnalysis } from "./analysis-engine.js";
 import { createRule } from "./create-rule.js";
-import type { ProjectContext, ReportSummary } from "../types/index.js";
 
 const TEST_DIR = join(import.meta.dirname, "__test-fixtures-engine__");
 

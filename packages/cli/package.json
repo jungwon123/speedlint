@@ -1,35 +1,35 @@
 {
-  "name": "@speedlint/cli",
-  "version": "0.1.0",
-  "description": "CLI for speedlint web performance optimizer",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jungwon123/speedlint.git",
-    "directory": "packages/cli"
-  },
-  "homepage": "https://github.com/jungwon123/speedlint#readme",
-  "keywords": ["speedlint", "performance", "cli", "web-vitals", "bundle-size"],
-  "type": "module",
-  "bin": {
-    "speedlint": "./dist/index.js"
-  },
-  "files": ["dist"],
-  "scripts": {
-    "build": "tsup",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist .turbo"
-  },
-  "dependencies": {
-    "@speedlint/core": "workspace:*",
-    "cac": "^6.7.0",
-    "picocolors": "^1.1.0"
-  },
-  "devDependencies": {
-    "tsup": "^8.3.0",
-    "typescript": "^5.7.0",
-    "vitest": "^3.0.0"
-  }
+	"name": "@speedlint/cli",
+	"version": "0.1.0",
+	"description": "CLI for speedlint web performance optimizer",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/jungwon123/speedlint.git",
+		"directory": "packages/cli"
+	},
+	"homepage": "https://github.com/jungwon123/speedlint#readme",
+	"keywords": ["speedlint", "performance", "cli", "web-vitals", "bundle-size"],
+	"type": "module",
+	"bin": {
+		"speedlint": "./dist/index.js"
+	},
+	"files": ["dist"],
+	"scripts": {
+		"build": "tsup",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"typecheck": "tsc --noEmit",
+		"clean": "rm -rf dist .turbo"
+	},
+	"dependencies": {
+		"@speedlint/core": "workspace:*",
+		"cac": "^6.7.0",
+		"picocolors": "^1.1.0"
+	},
+	"devDependencies": {
+		"tsup": "^8.3.0",
+		"typescript": "^5.7.0",
+		"vitest": "^3.0.0"
+	}
 }

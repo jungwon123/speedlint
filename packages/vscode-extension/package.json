@@ -1,69 +1,67 @@
 {
-  "name": "speedlint-vscode",
-  "displayName": "speedlint",
-  "description": "Web performance analysis with auto-fix — bundle size & Core Web Vitals",
-  "version": "0.1.0",
-  "publisher": "speedlint",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jungwon123/speedlint.git",
-    "directory": "packages/vscode-extension"
-  },
-  "engines": {
-    "vscode": "^1.85.0"
-  },
-  "categories": ["Linters"],
-  "keywords": ["performance", "lighthouse", "web-vitals", "bundle-size", "lint"],
-  "activationEvents": [
-    "workspaceContains:package.json"
-  ],
-  "main": "./dist/extension.js",
-  "contributes": {
-    "commands": [
-      {
-        "command": "speedlint.analyze",
-        "title": "Speedlint: Analyze Project"
-      },
-      {
-        "command": "speedlint.fix",
-        "title": "Speedlint: Fix All Auto-fixable Issues"
-      }
-    ],
-    "configuration": {
-      "title": "speedlint",
-      "properties": {
-        "speedlint.enable": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable/disable speedlint"
-        },
-        "speedlint.analyzeOnSave": {
-          "type": "boolean",
-          "default": true,
-          "description": "Run analysis on file save"
-        },
-        "speedlint.severity": {
-          "type": "string",
-          "default": "warning",
-          "enum": ["error", "warning", "info"],
-          "description": "Minimum severity to show"
-        }
-      }
-    }
-  },
-  "scripts": {
-    "build": "tsup",
-    "watch": "tsup --watch",
-    "package": "vsce package --no-dependencies",
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@speedlint/core": "workspace:*"
-  },
-  "devDependencies": {
-    "@types/vscode": "^1.85.0",
-    "tsup": "^8.3.0",
-    "typescript": "^5.7.0"
-  }
+	"name": "speedlint-vscode",
+	"displayName": "speedlint",
+	"description": "Web performance analysis with auto-fix — bundle size & Core Web Vitals",
+	"version": "0.1.0",
+	"publisher": "speedlint",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/jungwon123/speedlint.git",
+		"directory": "packages/vscode-extension"
+	},
+	"engines": {
+		"vscode": "^1.85.0"
+	},
+	"categories": ["Linters"],
+	"keywords": ["performance", "lighthouse", "web-vitals", "bundle-size", "lint"],
+	"activationEvents": ["workspaceContains:package.json"],
+	"main": "./dist/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "speedlint.analyze",
+				"title": "Speedlint: Analyze Project"
+			},
+			{
+				"command": "speedlint.fix",
+				"title": "Speedlint: Fix All Auto-fixable Issues"
+			}
+		],
+		"configuration": {
+			"title": "speedlint",
+			"properties": {
+				"speedlint.enable": {
+					"type": "boolean",
+					"default": true,
+					"description": "Enable/disable speedlint"
+				},
+				"speedlint.analyzeOnSave": {
+					"type": "boolean",
+					"default": true,
+					"description": "Run analysis on file save"
+				},
+				"speedlint.severity": {
+					"type": "string",
+					"default": "warning",
+					"enum": ["error", "warning", "info"],
+					"description": "Minimum severity to show"
+				}
+			}
+		}
+	},
+	"scripts": {
+		"build": "tsup",
+		"watch": "tsup --watch",
+		"package": "vsce package --no-dependencies",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@speedlint/core": "workspace:*"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.85.0",
+		"tsup": "^8.3.0",
+		"typescript": "^5.7.0"
+	}
 }

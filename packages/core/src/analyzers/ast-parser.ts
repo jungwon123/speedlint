@@ -1,13 +1,13 @@
 import { parseSync } from "@swc/core";
 import type {
-	Module,
-	ImportDeclaration,
+	CallExpression,
 	ExportAllDeclaration,
 	ExportNamedDeclaration,
-	JSXOpeningElement,
+	ImportDeclaration,
 	JSXAttribute,
-	CallExpression,
+	JSXOpeningElement,
 	MemberExpression,
+	Module,
 	StringLiteral,
 } from "@swc/core";
 
@@ -168,7 +168,10 @@ export function extractExports(module: Module): ExportInfo[] {
 					line: decl.span.start,
 				});
 			}
-		} else if (item.type === "ExportDefaultDeclaration" || item.type === "ExportDefaultExpression") {
+		} else if (
+			item.type === "ExportDefaultDeclaration" ||
+			item.type === "ExportDefaultExpression"
+		) {
 			exports.push({
 				type: "default",
 				line: item.span.start,
@@ -248,7 +251,8 @@ export function extractEventListeners(module: Module): EventListenerInfo[] {
 			if (
 				call.callee.type === "MemberExpression" &&
 				(call.callee as MemberExpression).property.type === "Identifier" &&
-				((call.callee as MemberExpression).property as { value: string }).value === "addEventListener" &&
+				((call.callee as MemberExpression).property as { value: string }).value ===
+					"addEventListener" &&
 				call.arguments.length >= 2
 			) {
 				const firstArg = call.arguments[0]?.expression;
@@ -260,7 +264,9 @@ export function extractEventListeners(module: Module): EventListenerInfo[] {
 					if (call.arguments.length >= 3) {
 						const thirdArg = call.arguments[2]?.expression;
 						if (thirdArg?.type === "ObjectExpression") {
-							const obj = thirdArg as { properties: Array<{ key?: { value?: string }; value?: { value?: boolean } }> };
+							const obj = thirdArg as {
+								properties: Array<{ key?: { value?: string }; value?: { value?: boolean } }>;
+							};
 							hasPassive = obj.properties.some(
 								(p) => p.key?.value === "passive" && p.value?.value === true,
 							);

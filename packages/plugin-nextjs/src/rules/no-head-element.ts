@@ -28,12 +28,14 @@ export const noHeadElement = createRule({
 
 			// Check for next/head import (Pages Router pattern used in App Router)
 			if (NEXT_HEAD_IMPORT.test(file.content)) {
-				const line = file.content.split("\n").findIndex((l) => /from\s+['"]next\/head['"]/.test(l)) + 1;
+				const line =
+					file.content.split("\n").findIndex((l) => /from\s+['"]next\/head['"]/.test(l)) + 1;
 				diagnostics.push({
 					ruleId: "nextjs/no-head-element",
 					severity: "error",
 					message: "next/head should not be used in App Router",
-					detail: "In App Router, use the metadata export or generateMetadata() instead of next/head",
+					detail:
+						"In App Router, use the metadata export or generateMetadata() instead of next/head",
 					file: filePath,
 					line,
 					impact: {

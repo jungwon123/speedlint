@@ -1,5 +1,5 @@
-import lighthouse from "lighthouse";
 import * as chromeLauncher from "chrome-launcher";
+import lighthouse from "lighthouse";
 
 export interface BenchmarkResult {
 	url: string;
@@ -45,12 +45,21 @@ export async function runBenchmark(options: BenchmarkOptions): Promise<Benchmark
 				output: "json",
 				logLevel: "error",
 				formFactor: device,
-				screenEmulation: device === "desktop"
-					? { mobile: false, width: 1350, height: 940, deviceScaleFactor: 1, disabled: false }
-					: undefined,
-				throttling: device === "desktop"
-					? { cpuSlowdownMultiplier: 1, downloadThroughputKbps: 0, uploadThroughputKbps: 0, requestLatencyMs: 0, rttMs: 40, throughputKbps: 10240 }
-					: undefined,
+				screenEmulation:
+					device === "desktop"
+						? { mobile: false, width: 1350, height: 940, deviceScaleFactor: 1, disabled: false }
+						: undefined,
+				throttling:
+					device === "desktop"
+						? {
+								cpuSlowdownMultiplier: 1,
+								downloadThroughputKbps: 0,
+								uploadThroughputKbps: 0,
+								requestLatencyMs: 0,
+								rttMs: 40,
+								throughputKbps: 10240,
+							}
+						: undefined,
 			});
 
 			if (!runnerResult?.lhr) {
@@ -70,17 +79,22 @@ export async function runBenchmark(options: BenchmarkOptions): Promise<Benchmark
 				metrics: {
 					lcp: Math.round(lhr.audits["largest-contentful-paint"]?.numericValue ?? 0),
 					fcp: Math.round(lhr.audits["first-contentful-paint"]?.numericValue ?? 0),
-					cls: parseFloat((lhr.audits["cumulative-layout-shift"]?.numericValue ?? 0).toFixed(3)),
+					cls: Number.parseFloat(
+						(lhr.audits["cumulative-layout-shift"]?.numericValue ?? 0).toFixed(3),
+					),
 					tbt: Math.round(lhr.audits["total-blocking-time"]?.numericValue ?? 0),
 					si: Math.round(lhr.audits["speed-index"]?.numericValue ?? 0),
-					tti: Math.round(lhr.audits["interactive"]?.numericValue ?? 0),
+					tti: Math.round(lhr.audits.interactive?.numericValue ?? 0),
 				},
 				timestamp: new Date().toISOString(),
 			});
 		}
 
 		// Average if multiple runs
-		if (results.length === 1) return results[0]!;
+		if (results.length === 1) {
+			const first = results[0];
+			if (first) return first;
+		}
 
 		return {
 			url,
@@ -93,7 +107,7 @@ export async function runBenchmark(options: BenchmarkOptions): Promise<Benchmark
 			metrics: {
 				lcp: avg(results.map((r) => r.metrics.lcp)),
 				fcp: avg(results.map((r) => r.metrics.fcp)),
-				cls: parseFloat(avg(results.map((r) => r.metrics.cls)).toFixed(3)),
+				cls: Number.parseFloat(avg(results.map((r) => r.metrics.cls)).toFixed(3)),
 				tbt: avg(results.map((r) => r.metrics.tbt)),
 				si: avg(results.map((r) => r.metrics.si)),
 				tti: avg(results.map((r) => r.metrics.tti)),
@@ -130,10 +144,18 @@ export function formatBenchmarkReport(result: BenchmarkResult): string {
 
 	// Core Web Vitals
 	lines.push("  Core Web Vitals");
-	lines.push(`    LCP:  ${metricColor(result.metrics.lcp, 2500, 4000)}ms ${metricLabel(result.metrics.lcp, 2500, 4000)}`);
-	lines.push(`    FCP:  ${metricColor(result.metrics.fcp, 1800, 3000)}ms ${metricLabel(result.metrics.fcp, 1800, 3000)}`);
-	lines.push(`    CLS:  ${clsColor(result.metrics.cls)} ${metricLabel(result.metrics.cls, 0.1, 0.25)}`);
-	lines.push(`    TBT:  ${metricColor(result.metrics.tbt, 200, 600)}ms ${metricLabel(result.metrics.tbt, 200, 600)}`);
+	lines.push(
+		`    LCP:  ${metricColor(result.metrics.lcp, 2500, 4000)}ms ${metricLabel(result.metrics.lcp, 2500, 4000)}`,
+	);
+	lines.push(
+		`    FCP:  ${metricColor(result.metrics.fcp, 1800, 3000)}ms ${metricLabel(result.metrics.fcp, 1800, 3000)}`,
+	);
+	lines.push(
+		`    CLS:  ${clsColor(result.metrics.cls)} ${metricLabel(result.metrics.cls, 0.1, 0.25)}`,
+	);
+	lines.push(
+		`    TBT:  ${metricColor(result.metrics.tbt, 200, 600)}ms ${metricLabel(result.metrics.tbt, 200, 600)}`,
+	);
 	lines.push(`    SI:   ${result.metrics.si}ms`);
 	lines.push(`    TTI:  ${result.metrics.tti}ms`);
 	lines.push("");

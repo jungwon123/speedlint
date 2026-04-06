@@ -1,11 +1,11 @@
-import { describe, expect, it, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import {
-	parseAST,
-	extractImports,
-	extractExports,
-	extractJSXElements,
-	extractEventListeners,
 	clearASTCache,
+	extractEventListeners,
+	extractExports,
+	extractImports,
+	extractJSXElements,
+	parseAST,
 } from "./ast-parser.js";
 
 beforeEach(() => {
@@ -104,7 +104,9 @@ describe("extractExports", () => {
 
 describe("extractJSXElements", () => {
 	it("should extract img elements", () => {
-		const module = parseAST('const el = <img src="/test.jpg" alt="test" />;', { filename: "a.tsx" });
+		const module = parseAST('const el = <img src="/test.jpg" alt="test" />;', {
+			filename: "a.tsx",
+		});
 		const elements = extractJSXElements(module, ["img"]);
 		expect(elements).toHaveLength(1);
 		expect(elements[0]?.tagName).toBe("img");
@@ -112,7 +114,9 @@ describe("extractJSXElements", () => {
 	});
 
 	it("should extract boolean attributes", () => {
-		const module = parseAST("const el = <Image src='/hero.jpg' priority />;", { filename: "a.tsx" });
+		const module = parseAST("const el = <Image src='/hero.jpg' priority />;", {
+			filename: "a.tsx",
+		});
 		const elements = extractJSXElements(module, ["Image"]);
 		expect(elements).toHaveLength(1);
 		expect(elements[0]?.attributes.get("priority")).toBe(true);

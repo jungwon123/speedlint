@@ -24,7 +24,9 @@ export const missingImagePriority = createRule({
 		for (const [filePath, file] of context.files) {
 			if (!isPageOrLayoutFile(filePath)) continue;
 
-			const imgMatches = file.content.matchAll(new RegExp(IMG_TAG_PATTERN.source, IMG_TAG_PATTERN.flags));
+			const imgMatches = file.content.matchAll(
+				new RegExp(IMG_TAG_PATTERN.source, IMG_TAG_PATTERN.flags),
+			);
 			let imgIndex = 0;
 			for (const match of imgMatches) {
 				imgIndex++;
@@ -56,15 +58,17 @@ export const missingImagePriority = createRule({
 							const line = fixContent.substring(0, fixMatchIndex).split("\n").length;
 							const lineStart = fixContent.lastIndexOf("\n", fixMatchIndex) + 1;
 							const col = fixMatchIndex - lineStart;
-							return [{
-								type: "replaceText",
-								filePath: fixFilePath,
-								range: {
-									start: { line, column: col },
-									end: { line, column: col + fixTag.length },
+							return [
+								{
+									type: "replaceText",
+									filePath: fixFilePath,
+									range: {
+										start: { line, column: col },
+										end: { line, column: col + fixTag.length },
+									},
+									newText: newTag,
 								},
-								newText: newTag,
-							}];
+							];
 						},
 					});
 				} else if (!FETCHPRIORITY_PATTERN.test(tag)) {
@@ -86,22 +90,26 @@ export const missingImagePriority = createRule({
 							const line = fixContent.substring(0, fixMatchIndex).split("\n").length;
 							const lineStart = fixContent.lastIndexOf("\n", fixMatchIndex) + 1;
 							const col = fixMatchIndex - lineStart;
-							return [{
-								type: "replaceText",
-								filePath: fixFilePath,
-								range: {
-									start: { line, column: col },
-									end: { line, column: col + fixTag.length },
+							return [
+								{
+									type: "replaceText",
+									filePath: fixFilePath,
+									range: {
+										start: { line, column: col },
+										end: { line, column: col + fixTag.length },
+									},
+									newText: newTag,
 								},
-								newText: newTag,
-							}];
+							];
 						},
 					});
 				}
 			}
 
 			if (isNextjs) {
-				const imageMatches = file.content.matchAll(new RegExp(IMAGE_COMPONENT_PATTERN.source, IMAGE_COMPONENT_PATTERN.flags));
+				const imageMatches = file.content.matchAll(
+					new RegExp(IMAGE_COMPONENT_PATTERN.source, IMAGE_COMPONENT_PATTERN.flags),
+				);
 				let imageIndex = 0;
 				for (const match of imageMatches) {
 					imageIndex++;
@@ -130,15 +138,17 @@ export const missingImagePriority = createRule({
 								const line = fixContent.substring(0, fixMatchIndex).split("\n").length;
 								const lineStart = fixContent.lastIndexOf("\n", fixMatchIndex) + 1;
 								const col = fixMatchIndex - lineStart;
-								return [{
-									type: "replaceText",
-									filePath: fixFilePath,
-									range: {
-										start: { line, column: col },
-										end: { line, column: col + fixTag.length },
+								return [
+									{
+										type: "replaceText",
+										filePath: fixFilePath,
+										range: {
+											start: { line, column: col },
+											end: { line, column: col + fixTag.length },
+										},
+										newText: newTag,
 									},
-									newText: newTag,
-								}];
+								];
 							},
 						});
 					}

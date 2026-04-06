@@ -2,9 +2,9 @@ import type { SpeedlintPlugin } from "../types/index.js";
 
 // Bundle rules
 import { barrelFileReexport } from "../rules/bundle/barrel-file-reexport.js";
+import { dynamicImportCandidate } from "../rules/bundle/dynamic-import-candidate.js";
 import { heavyDependency } from "../rules/bundle/heavy-dependency.js";
 import { unusedDependency } from "../rules/bundle/unused-dependency.js";
-import { dynamicImportCandidate } from "../rules/bundle/dynamic-import-candidate.js";
 
 // LCP rules
 import { missingImagePriority } from "../rules/lcp/missing-image-priority.js";

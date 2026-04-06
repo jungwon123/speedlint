@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { heavyDependency } from "./heavy-dependency.js";
 import type { ProjectContext, RuleContext } from "../../types/index.js";
+import { heavyDependency } from "./heavy-dependency.js";
 
 function makeContext(deps: Record<string, string>): RuleContext {
 	return {

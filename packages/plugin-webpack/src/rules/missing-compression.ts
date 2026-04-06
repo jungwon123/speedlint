@@ -17,12 +17,16 @@ export const missingCompression = createRule({
 		const diagnostics: Diagnostic[] = [];
 		for (const [filePath, file] of context.files) {
 			if (!/webpack\.config\.(js|ts|mjs)$/.test(filePath)) continue;
-			if (!file.content.includes("CompressionPlugin") && !file.content.includes("compression-webpack-plugin")) {
+			if (
+				!file.content.includes("CompressionPlugin") &&
+				!file.content.includes("compression-webpack-plugin")
+			) {
 				diagnostics.push({
 					ruleId: "webpack/missing-compression",
 					severity: "info",
 					message: "No compression plugin detected in webpack config",
-					detail: "Add compression-webpack-plugin for gzip/brotli pre-compression to reduce transfer size",
+					detail:
+						"Add compression-webpack-plugin for gzip/brotli pre-compression to reduce transfer size",
 					file: filePath,
 					impact: { metric: "bundleSize", estimated: "-60-80% transfer size", confidence: "high" },
 				});

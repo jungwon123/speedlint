@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { filterByCategory, filterBySeverity, resolveRules } from "./rule-resolver.js";
-import { createRule } from "./create-rule.js";
 import type { ProjectContext, SpeedlintConfig } from "../types/index.js";
+import { createRule } from "./create-rule.js";
+import { filterByCategory, filterBySeverity, resolveRules } from "./rule-resolver.js";
 
 const mockProject: ProjectContext = {
 	root: "/test",

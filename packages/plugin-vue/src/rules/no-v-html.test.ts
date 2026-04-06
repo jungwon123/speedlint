@@ -1,10 +1,17 @@
+import type { ProjectContext, RuleContext } from "@speedlint/core";
 import { describe, expect, it } from "vitest";
 import { noVHtml } from "./no-v-html.js";
-import type { ProjectContext, RuleContext } from "@speedlint/core";
 
 function makeContext(files: Record<string, string>): RuleContext {
 	const fileMap = new Map(Object.entries(files).map(([p, c]) => [p, { content: c, mtime: 0 }]));
-	return { project: { root: "/test", framework: "vue", packageJson: {} } as ProjectContext, files: fileMap, getAST: () => ({}), getDependencyGraph: () => ({ nodes: new Map() }), getConfig: () => undefined, report: () => {} };
+	return {
+		project: { root: "/test", framework: "vue", packageJson: {} } as ProjectContext,
+		files: fileMap,
+		getAST: () => ({}),
+		getDependencyGraph: () => ({ nodes: new Map() }),
+		getConfig: () => undefined,
+		report: () => {},
+	};
 }
 
 describe("vue/no-v-html", () => {

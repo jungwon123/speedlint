@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { barrelFileReexport } from "./barrel-file-reexport.js";
 import type { ProjectContext, RuleContext } from "../../types/index.js";
+import { barrelFileReexport } from "./barrel-file-reexport.js";
 
 function makeContext(files: Record<string, string>): RuleContext {
 	const fileMap = new Map(
@@ -35,10 +35,7 @@ describe("bundle/barrel-file-reexport", () => {
 
 	it("should not flag barrel files with fewer than 3 re-exports", () => {
 		const ctx = makeContext({
-			"src/utils/index.ts": [
-				"export * from './math'",
-				"export * from './string'",
-			].join("\n"),
+			"src/utils/index.ts": ["export * from './math'", "export * from './string'"].join("\n"),
 			"src/app.ts": "import { add } from './utils'",
 		});
 

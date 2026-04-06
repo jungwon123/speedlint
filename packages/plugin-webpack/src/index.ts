@@ -1,6 +1,6 @@
 import type { SpeedlintPlugin } from "@speedlint/core";
-import { missingSplitChunks } from "./rules/missing-splitchunks.js";
 import { missingCompression } from "./rules/missing-compression.js";
+import { missingSplitChunks } from "./rules/missing-splitchunks.js";
 
 const pluginWebpack: SpeedlintPlugin = {
 	name: "@speedlint/plugin-webpack",

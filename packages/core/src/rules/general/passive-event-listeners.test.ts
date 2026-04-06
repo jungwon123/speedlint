@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { passiveEventListeners } from "./passive-event-listeners.js";
 import type { ProjectContext, RuleContext } from "../../types/index.js";
+import { passiveEventListeners } from "./passive-event-listeners.js";
 
 function makeContext(files: Record<string, string>): RuleContext {
 	const fileMap = new Map(

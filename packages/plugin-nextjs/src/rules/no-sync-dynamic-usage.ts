@@ -45,7 +45,8 @@ export const noSyncDynamicUsage = createRule({
 					ruleId: "nextjs/no-sync-dynamic-usage",
 					severity: "info",
 					message: "Dynamic import without ssr: false",
-					detail: "If this component uses browser APIs (window, document), add { ssr: false } to avoid hydration mismatch",
+					detail:
+						"If this component uses browser APIs (window, document), add { ssr: false } to avoid hydration mismatch",
 					file: filePath,
 					line: lineNumber,
 					impact: {

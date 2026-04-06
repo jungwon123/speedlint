@@ -1,6 +1,6 @@
+import type { ProjectContext, RuleContext } from "@speedlint/core";
 import { describe, expect, it } from "vitest";
 import { noInlineStylesInRender } from "./no-inline-styles-in-render.js";
-import type { ProjectContext, RuleContext } from "@speedlint/core";
 
 function makeContext(files: Record<string, string>): RuleContext {
 	const fileMap = new Map(
@@ -36,10 +36,9 @@ describe("react/no-inline-styles-in-render", () => {
 
 	it("should detect multiple inline styles", () => {
 		const ctx = makeContext({
-			"src/Page.tsx": [
-				'<div style={{ margin: 0 }} />',
-				'<span style={{ fontSize: 14 }} />',
-			].join("\n"),
+			"src/Page.tsx": ["<div style={{ margin: 0 }} />", "<span style={{ fontSize: 14 }} />"].join(
+				"\n",
+			),
 		});
 		const diagnostics = noInlineStylesInRender.detect(ctx);
 		expect(diagnostics).toHaveLength(2);

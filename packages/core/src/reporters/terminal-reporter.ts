@@ -1,5 +1,5 @@
-import type { AnalysisReport, Diagnostic, ProjectContext, Severity } from "../types/index.js";
 import type { AnalysisResult } from "../engine/analysis-engine.js";
+import type { AnalysisReport, Diagnostic, ProjectContext, Severity } from "../types/index.js";
 
 const SEVERITY_LABELS: Record<Severity, string> = {
 	error: "ERROR",
@@ -115,10 +115,7 @@ export function formatTerminalReport(
 /**
  * Formats analysis results as JSON.
  */
-export function formatJsonReport(
-	project: ProjectContext,
-	result: AnalysisResult,
-): string {
+export function formatJsonReport(project: ProjectContext, result: AnalysisResult): string {
 	const errors = result.diagnostics.filter((d) => d.severity === "error").length;
 	const warnings = result.diagnostics.filter((d) => d.severity === "warning").length;
 	const infos = result.diagnostics.filter((d) => d.severity === "info").length;
@@ -157,9 +154,7 @@ function formatDiagnostic(diag: Diagnostic, options: FormatOptions): string[] {
 	const color = SEVERITY_COLORS[diag.severity];
 	const label = SEVERITY_LABELS[diag.severity];
 
-	const location = diag.file
-		? `${diag.file}${diag.line ? `:${diag.line}` : ""}`
-		: "";
+	const location = diag.file ? `${diag.file}${diag.line ? `:${diag.line}` : ""}` : "";
 
 	lines.push(`  ${color(label)} ${bold(diag.ruleId)}`);
 	if (location) {

@@ -1,7 +1,7 @@
 import type { SpeedlintPlugin } from "@speedlint/core";
-import { useNextImage } from "./rules/use-next-image.js";
 import { noHeadElement } from "./rules/no-head-element.js";
 import { noSyncDynamicUsage } from "./rules/no-sync-dynamic-usage.js";
+import { useNextImage } from "./rules/use-next-image.js";
 
 const pluginNextjs: SpeedlintPlugin = {
 	name: "@speedlint/plugin-nextjs",

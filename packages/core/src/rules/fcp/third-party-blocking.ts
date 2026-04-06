@@ -68,7 +68,8 @@ export const thirdPartyBlocking = createRule({
 					ruleId: "fcp/third-party-blocking",
 					severity: "warning",
 					message: `Third-party script (${domain}) loaded synchronously`,
-					detail: "Add async or defer attribute, or load via requestIdleCallback to avoid blocking FCP",
+					detail:
+						"Add async or defer attribute, or load via requestIdleCallback to avoid blocking FCP",
 					file: filePath,
 					line: lineNumber,
 					impact: {

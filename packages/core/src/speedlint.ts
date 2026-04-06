@@ -2,9 +2,9 @@ import { scanProject } from "./analyzers/project-scanner.js";
 import { runAnalysis } from "./engine/analysis-engine.js";
 import type { AnalysisResult } from "./engine/analysis-engine.js";
 import { builtInPlugin } from "./engine/built-in-plugin.js";
-import { resolveRules, filterByCategory, filterBySeverity } from "./engine/rule-resolver.js";
+import { filterByCategory, filterBySeverity, resolveRules } from "./engine/rule-resolver.js";
 import { applyFixes } from "./fixers/fix-engine.js";
-import type { FixResult, FixOptions } from "./fixers/fix-engine.js";
+import type { FixOptions, FixResult } from "./fixers/fix-engine.js";
 import type { ProjectContext, RuleCategory, Severity, SpeedlintConfig } from "./types/index.js";
 
 export interface SpeedlintOptions {

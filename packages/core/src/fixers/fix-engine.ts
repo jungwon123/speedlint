@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync } from "node:fs";
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import type { Diagnostic, Transform } from "../types/index.js";
 
@@ -164,7 +164,7 @@ function applyJsonTransforms(content: string, transforms: Transform[]): string {
 			setNestedValue(obj, t.jsonPath, t.jsonValue);
 		}
 
-		return JSON.stringify(obj, null, 2) + "\n";
+		return `${JSON.stringify(obj, null, 2)}\n`;
 	} catch {
 		return content;
 	}

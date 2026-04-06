@@ -22,7 +22,8 @@ export const missingBuildTarget = createRule({
 					ruleId: "vite/missing-build-target",
 					severity: "info",
 					message: "Vite config missing build.target",
-					detail: "Set build.target to your minimum browser support (e.g., 'es2022') to avoid unnecessary polyfills",
+					detail:
+						"Set build.target to your minimum browser support (e.g., 'es2022') to avoid unnecessary polyfills",
 					file: filePath,
 					impact: { metric: "bundleSize", estimated: "-5-20KB", confidence: "medium" },
 				});

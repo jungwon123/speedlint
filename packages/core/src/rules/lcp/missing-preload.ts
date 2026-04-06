@@ -35,7 +35,8 @@ export const missingPreload = createRule({
 						ruleId: "lcp/missing-preload",
 						severity: "warning",
 						message: "Google Fonts loaded without preconnect",
-						detail: 'Add <link rel="preconnect" href="https://fonts.googleapis.com"> before the font stylesheet',
+						detail:
+							'Add <link rel="preconnect" href="https://fonts.googleapis.com"> before the font stylesheet',
 						file: filePath,
 						impact: {
 							metric: "LCP",
@@ -75,10 +76,12 @@ export const missingPreload = createRule({
 });
 
 function isHtmlOrHeadFile(filePath: string): boolean {
-	return /\.(html|htm)$/.test(filePath) ||
+	return (
+		/\.(html|htm)$/.test(filePath) ||
 		/layout\.(tsx|jsx|ts|js)$/.test(filePath) ||
 		/document\.(tsx|jsx|ts|js)$/.test(filePath) ||
 		/app\.(tsx|jsx|ts|js)$/.test(filePath) ||
 		/_app\.(tsx|jsx|ts|js)$/.test(filePath) ||
-		/_document\.(tsx|jsx|ts|js)$/.test(filePath);
+		/_document\.(tsx|jsx|ts|js)$/.test(filePath)
+	);
 }

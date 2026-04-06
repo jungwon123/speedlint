@@ -1,7 +1,8 @@
 import { createRule } from "../../engine/create-rule.js";
 import type { Diagnostic, RuleContext, Transform } from "../../types/index.js";
 
-const ADD_LISTENER_PATTERN = /addEventListener\s*\(\s*['"](\w+)['"]\s*,\s*[^,)]+(?:,\s*(\{[^}]*\}|true|false))?\s*\)/g;
+const ADD_LISTENER_PATTERN =
+	/addEventListener\s*\(\s*['"](\w+)['"]\s*,\s*[^,)]+(?:,\s*(\{[^}]*\}|true|false))?\s*\)/g;
 const PASSIVE_EVENTS = new Set(["scroll", "touchstart", "touchmove", "wheel", "mousewheel"]);
 const PASSIVE_PATTERN = /passive\s*:\s*true/;
 
@@ -44,10 +45,15 @@ export const passiveEventListeners = createRule({
 					ruleId: "general/passive-event-listeners",
 					severity: "warning",
 					message: `'${eventName}' listener missing { passive: true }`,
-					detail: "Non-passive scroll/touch listeners block the compositor thread, causing janky scrolling",
+					detail:
+						"Non-passive scroll/touch listeners block the compositor thread, causing janky scrolling",
 					file: filePath,
 					line: lineNumber,
-					impact: { metric: "TBT", estimated: "improves scroll responsiveness", confidence: "high" },
+					impact: {
+						metric: "TBT",
+						estimated: "improves scroll responsiveness",
+						confidence: "high",
+					},
 					fix: (): Transform[] => {
 						let newStr: string;
 						if (!fixOptions) {
@@ -55,7 +61,10 @@ export const passiveEventListeners = createRule({
 							newStr = fixMatchStr.replace(/\)\s*$/, ", { passive: true })");
 						} else if (fixOptions.startsWith("{")) {
 							// Has object options: add passive to it
-							newStr = fixMatchStr.replace(fixOptions, fixOptions.replace("{", "{ passive: true, "));
+							newStr = fixMatchStr.replace(
+								fixOptions,
+								fixOptions.replace("{", "{ passive: true, "),
+							);
 						} else {
 							// Has boolean (useCapture): replace with object
 							newStr = fixMatchStr.replace(fixOptions, `{ passive: true, capture: ${fixOptions} }`);
@@ -63,15 +72,17 @@ export const passiveEventListeners = createRule({
 						const line = fixContent.substring(0, fixMatchIndex).split("\n").length;
 						const lineStart = fixContent.lastIndexOf("\n", fixMatchIndex) + 1;
 						const col = fixMatchIndex - lineStart;
-						return [{
-							type: "replaceText",
-							filePath: fixFilePath,
-							range: {
-								start: { line, column: col },
-								end: { line, column: col + fixMatchStr.length },
+						return [
+							{
+								type: "replaceText",
+								filePath: fixFilePath,
+								range: {
+									start: { line, column: col },
+									end: { line, column: col + fixMatchStr.length },
+								},
+								newText: newStr,
 							},
-							newText: newStr,
-						}];
+						];
 					},
 				});
 			}

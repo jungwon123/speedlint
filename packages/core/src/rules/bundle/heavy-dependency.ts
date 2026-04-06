@@ -11,20 +11,35 @@ interface HeavyDep {
 
 const HEAVY_DEPS: HeavyDep[] = [
 	{
-		name: "moment", sizeKB: 287, alternative: "dayjs", alternativeSizeKB: 7,
+		name: "moment",
+		sizeKB: 287,
+		alternative: "dayjs",
+		alternativeSizeKB: 7,
 		importRewrite: { from: /import\s+(\w+)\s+from\s+['"]moment['"]/, to: "import $1 from 'dayjs'" },
 	},
 	{
-		name: "moment-timezone", sizeKB: 340, alternative: "dayjs + dayjs/plugin/timezone", alternativeSizeKB: 10,
+		name: "moment-timezone",
+		sizeKB: 340,
+		alternative: "dayjs + dayjs/plugin/timezone",
+		alternativeSizeKB: 10,
 	},
 	{
-		name: "lodash", sizeKB: 531, alternative: "lodash-es (tree-shakeable)", alternativeSizeKB: 10,
-		importRewrite: { from: /import\s+(\w+)\s+from\s+['"]lodash['"]/, to: "import $1 from 'lodash-es'" },
+		name: "lodash",
+		sizeKB: 531,
+		alternative: "lodash-es (tree-shakeable)",
+		alternativeSizeKB: 10,
+		importRewrite: {
+			from: /import\s+(\w+)\s+from\s+['"]lodash['"]/,
+			to: "import $1 from 'lodash-es'",
+		},
 	},
 	{ name: "underscore", sizeKB: 54, alternative: "native ES methods", alternativeSizeKB: 0 },
 	{ name: "jquery", sizeKB: 87, alternative: "native DOM API", alternativeSizeKB: 0 },
 	{
-		name: "axios", sizeKB: 29, alternative: "ky or native fetch", alternativeSizeKB: 3,
+		name: "axios",
+		sizeKB: 29,
+		alternative: "ky or native fetch",
+		alternativeSizeKB: 3,
 	},
 	{ name: "request", sizeKB: 200, alternative: "node-fetch or native fetch", alternativeSizeKB: 0 },
 	{ name: "bluebird", sizeKB: 80, alternative: "native Promise", alternativeSizeKB: 0 },

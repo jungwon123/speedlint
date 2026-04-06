@@ -16,12 +16,14 @@ const SYNC_PATTERNS: SyncPattern[] = [
 	{
 		pattern: /localStorage\.(getItem|setItem)\s*\(/g,
 		message: "Synchronous localStorage access",
-		detail: "localStorage is synchronous and blocks the main thread. Consider using an async storage wrapper",
+		detail:
+			"localStorage is synchronous and blocks the main thread. Consider using an async storage wrapper",
 	},
 	{
 		pattern: /document\.querySelectorAll\s*\([^)]+\)[\s\S]{0,20}\.forEach/g,
 		message: "DOM traversal with forEach in render path",
-		detail: "Large DOM queries can block the main thread. Consider using IntersectionObserver or batching",
+		detail:
+			"Large DOM queries can block the main thread. Consider using IntersectionObserver or batching",
 	},
 	{
 		pattern: /new RegExp\s*\([^)]{100,}\)/g,

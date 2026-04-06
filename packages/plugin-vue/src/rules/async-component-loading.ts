@@ -32,7 +32,11 @@ export const asyncComponentLoading = createRule({
 					detail: `Replace with: () => import('./views/${match[2]}') in route definition`,
 					file: filePath,
 					line,
-					impact: { metric: "bundleSize", estimated: "reduces initial bundle", confidence: "medium" },
+					impact: {
+						metric: "bundleSize",
+						estimated: "reduces initial bundle",
+						confidence: "medium",
+					},
 				});
 			}
 		}

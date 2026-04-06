@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { missingImageDimensions } from "./missing-image-dimensions.js";
 import type { ProjectContext, RuleContext } from "../../types/index.js";
+import { missingImageDimensions } from "./missing-image-dimensions.js";
 
 function makeContext(files: Record<string, string>): RuleContext {
 	const fileMap = new Map(
@@ -53,7 +53,7 @@ describe("cls/missing-image-dimensions", () => {
 
 	it("should skip non-component files", () => {
 		const ctx = makeContext({
-			"src/utils.ts": 'const html = \'<img src="/photo.jpg" />\'',
+			"src/utils.ts": "const html = '<img src=\"/photo.jpg\" />'",
 		});
 		const diagnostics = missingImageDimensions.detect(ctx);
 		expect(diagnostics).toHaveLength(0);

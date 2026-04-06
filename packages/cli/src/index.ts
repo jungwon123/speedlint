@@ -1,15 +1,15 @@
-import { cac } from "cac";
 import {
 	analyze,
-	fix,
-	formatTerminalReport,
-	formatJsonReport,
 	builtInPlugin,
-	watchProject,
-	runBenchmark,
+	fix,
 	formatBenchmarkReport,
+	formatJsonReport,
+	formatTerminalReport,
+	runBenchmark,
+	watchProject,
 } from "@speedlint/core";
 import type { RuleCategory, Severity } from "@speedlint/core";
+import { cac } from "cac";
 
 const cli = cac("speedlint");
 
@@ -20,9 +20,10 @@ cli
 	.option("--json", "Output as JSON")
 	.action(async (url: string, options: Record<string, unknown>) => {
 		const runs = Number(options.runs) || 1;
-		const device = (options.device as string) === "desktop" ? "desktop" as const : "mobile" as const;
+		const device =
+			(options.device as string) === "desktop" ? ("desktop" as const) : ("mobile" as const);
 
-		console.log(`\n  Launching headless Chrome...`);
+		console.log("\n  Launching headless Chrome...");
 		console.log(`  Measuring ${url} (${device}, ${runs} run${runs > 1 ? "s" : ""})...\n`);
 
 		try {
@@ -65,12 +66,13 @@ cli
 			);
 
 			// Show analysis report
-			const report = options.format === "json"
-				? formatJsonReport(analyzeResult.project, analyzeResult.analysis)
-				: formatTerminalReport(analyzeResult.project, analyzeResult.analysis, {
-					verbose: !!options.verbose,
-					quiet: !!options.quiet,
-				});
+			const report =
+				options.format === "json"
+					? formatJsonReport(analyzeResult.project, analyzeResult.analysis)
+					: formatTerminalReport(analyzeResult.project, analyzeResult.analysis, {
+							verbose: !!options.verbose,
+							quiet: !!options.quiet,
+						});
 			console.log(report);
 
 			// Show fix results
@@ -82,7 +84,9 @@ cli
 						console.log(f.diff);
 					}
 				}
-				console.log(`\n  ${fixResult.applied.length} fix(es) ${options.fixDryRun ? "available" : "applied"}.`);
+				console.log(
+					`\n  ${fixResult.applied.length} fix(es) ${options.fixDryRun ? "available" : "applied"}.`,
+				);
 			}
 
 			if (fixResult.skipped.length > 0 && options.verbose) {
@@ -96,12 +100,13 @@ cli
 		} else {
 			const runAnalysis = () => {
 				const result = analyze({ root, category, severity });
-				const report = options.format === "json"
-					? formatJsonReport(result.project, result.analysis)
-					: formatTerminalReport(result.project, result.analysis, {
-						verbose: !!options.verbose,
-						quiet: !!options.quiet,
-					});
+				const report =
+					options.format === "json"
+						? formatJsonReport(result.project, result.analysis)
+						: formatTerminalReport(result.project, result.analysis, {
+								verbose: !!options.verbose,
+								quiet: !!options.quiet,
+							});
 				console.log(report);
 				return result;
 			};
@@ -135,10 +140,7 @@ cli
 		const root = path ?? process.cwd();
 		const category = options.category as RuleCategory | undefined;
 
-		const { analyzeResult, fixResult } = fix(
-			{ root, category },
-			{ dryRun: !!options.dryRun },
-		);
+		const { analyzeResult, fixResult } = fix({ root, category }, { dryRun: !!options.dryRun });
 
 		const report = formatTerminalReport(analyzeResult.project, analyzeResult.analysis);
 		console.log(report);
@@ -151,16 +153,16 @@ cli
 					console.log(f.diff);
 				}
 			}
-			console.log(`\n  ${fixResult.applied.length} fix(es) ${options.dryRun ? "available" : "applied"}.`);
+			console.log(
+				`\n  ${fixResult.applied.length} fix(es) ${options.dryRun ? "available" : "applied"}.`,
+			);
 		} else {
 			console.log("\n  No fixable issues found.");
 		}
 	});
 
-cli
-	.command("init", "Generate speedlint.config.ts")
-	.action(async () => {
-		const configContent = `import { defineConfig } from "@speedlint/core";
+cli.command("init", "Generate speedlint.config.ts").action(async () => {
+	const configContent = `import { defineConfig } from "@speedlint/core";
 
 export default defineConfig({
   rules: {
@@ -187,12 +189,12 @@ export default defineConfig({
   ],
 });
 `;
-		const { writeFileSync } = await import("node:fs");
-		const { join } = await import("node:path");
-		const configPath = join(process.cwd(), "speedlint.config.ts");
-		writeFileSync(configPath, configContent, "utf-8");
-		console.log(`  Created ${configPath}`);
-	});
+	const { writeFileSync } = await import("node:fs");
+	const { join } = await import("node:path");
+	const configPath = join(process.cwd(), "speedlint.config.ts");
+	writeFileSync(configPath, configContent, "utf-8");
+	console.log(`  Created ${configPath}`);
+});
 
 cli
 	.command("rules", "List all available rules")
@@ -204,29 +206,29 @@ cli
 		for (const rule of builtInPlugin.rules) {
 			if (category && rule.meta.category !== category) continue;
 			const fixBadge = rule.meta.fixable ? " [fixable]" : "";
-			console.log(`  ${rule.meta.severity.padEnd(7)} ${rule.meta.id.padEnd(40)} ${rule.meta.description}${fixBadge}`);
+			console.log(
+				`  ${rule.meta.severity.padEnd(7)} ${rule.meta.id.padEnd(40)} ${rule.meta.description}${fixBadge}`,
+			);
 		}
 		console.log(`\n  ${builtInPlugin.rules.length} rules total\n`);
 	});
 
-cli
-	.command("doctor", "Check installation and project compatibility")
-	.action(async () => {
-		console.log("\n  speedlint doctor\n");
-		try {
-			const result = analyze({ root: process.cwd() });
-			console.log(`  Project: ${result.project.root}`);
-			console.log(`  Framework: ${result.project.framework ?? "vanilla"}`);
-			console.log(`  Bundler: ${result.project.bundler ?? "none"}`);
-			console.log(`  Language: ${result.project.language}`);
-			console.log(`  Module: ${result.project.moduleSystem}`);
-			console.log(`  Config files: ${result.project.configFiles.size}`);
-			console.log(`\n  ✓ speedlint is working correctly\n`);
-		} catch (err) {
-			console.error(`  ✗ ${err instanceof Error ? err.message : String(err)}\n`);
-			process.exit(1);
-		}
-	});
+cli.command("doctor", "Check installation and project compatibility").action(async () => {
+	console.log("\n  speedlint doctor\n");
+	try {
+		const result = analyze({ root: process.cwd() });
+		console.log(`  Project: ${result.project.root}`);
+		console.log(`  Framework: ${result.project.framework ?? "vanilla"}`);
+		console.log(`  Bundler: ${result.project.bundler ?? "none"}`);
+		console.log(`  Language: ${result.project.language}`);
+		console.log(`  Module: ${result.project.moduleSystem}`);
+		console.log(`  Config files: ${result.project.configFiles.size}`);
+		console.log("\n  ✓ speedlint is working correctly\n");
+	} catch (err) {
+		console.error(`  ✗ ${err instanceof Error ? err.message : String(err)}\n`);
+		process.exit(1);
+	}
+});
 
 cli.help();
 cli.version("0.1.0");

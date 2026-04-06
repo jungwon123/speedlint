@@ -1,16 +1,26 @@
 import { createRule } from "../../engine/create-rule.js";
 import type { Diagnostic, RuleContext, Transform } from "../../types/index.js";
 
-const IMPORT_PATTERNS = [
-	/from\s+['"]([^./][^'"]*)['"]/g,
-	/require\s*\(\s*['"]([^./][^'"]*)['"]/g,
-];
+const IMPORT_PATTERNS = [/from\s+['"]([^./][^'"]*)['"]/g, /require\s*\(\s*['"]([^./][^'"]*)['"]/g];
 
 const IMPLICIT_DEPS = new Set([
-	"typescript", "@types/node", "@types/react", "@types/react-dom",
-	"eslint", "prettier", "biome", "@biomejs/biome",
-	"vitest", "jest", "tsup", "turbo",
-	"autoprefixer", "tailwindcss", "postcss", "@swc/core", "esbuild",
+	"typescript",
+	"@types/node",
+	"@types/react",
+	"@types/react-dom",
+	"eslint",
+	"prettier",
+	"biome",
+	"@biomejs/biome",
+	"vitest",
+	"jest",
+	"tsup",
+	"turbo",
+	"autoprefixer",
+	"tailwindcss",
+	"postcss",
+	"@swc/core",
+	"esbuild",
 ]);
 
 export const unusedDependency = createRule({
@@ -31,8 +41,7 @@ export const unusedDependency = createRule({
 		for (const [, file] of context.files) {
 			for (const pattern of IMPORT_PATTERNS) {
 				const regex = new RegExp(pattern.source, pattern.flags);
-				let match: RegExpExecArray | null;
-				while ((match = regex.exec(file.content)) !== null) {
+				for (const match of file.content.matchAll(regex)) {
 					const pkg = match[1];
 					if (pkg) {
 						const normalized = pkg.startsWith("@")
@@ -57,12 +66,14 @@ export const unusedDependency = createRule({
 				message: `${depName} is listed in dependencies but never imported`,
 				detail: `Remove ${depName} from package.json if it's not needed, or move to devDependencies`,
 				impact: { metric: "bundleSize", estimated: "varies", confidence: "medium" },
-				fix: (): Transform[] => [{
-					type: "modifyJSON",
-					filePath: "package.json",
-					jsonPath: `dependencies.${fixDepName}`,
-					jsonValue: undefined,
-				}],
+				fix: (): Transform[] => [
+					{
+						type: "modifyJSON",
+						filePath: "package.json",
+						jsonPath: `dependencies.${fixDepName}`,
+						jsonValue: undefined,
+					},
+				],
 			});
 		}
 
